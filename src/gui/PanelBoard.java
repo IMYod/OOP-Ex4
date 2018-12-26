@@ -59,7 +59,8 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	public void paint(Graphics g)
 	{
-		this.setSize(window.getWidth()-16, window.getHeight()-59); //check this numbers!!
+//		this.setSize(window.getWidth()-16, window.getHeight()-59); //check this numbers!!
+		this.setSize(window.getWidth()-16, window.getHeight()-90); //check this numbers!!
 		
 		//draw background
 		g.drawImage(map.myImage,0, 0, this.getWidth(), this.getHeight(), this);

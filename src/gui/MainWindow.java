@@ -45,7 +45,8 @@ import guiObjects.Map;
  */
 public class MainWindow extends JFrame
 {
-	public PanelBoard myBoard; 
+	public PanelBoard myBoard;
+	public PanelBottom bottom;
 	public AllObjects game;
 	public Press press = Press.NOTHING;
 	public Play play;
@@ -94,8 +95,12 @@ public class MainWindow extends JFrame
 	}
 
 	private void initPanels() {
-		this.add(myBoard);
+		this.add("Center", myBoard);
 		myBoard.setVisible(true);
+		
+		bottom = new PanelBottom(this);
+		add("South", bottom);
+		bottom.setVisible(true);
 	}
 
 	public boolean importCsv() {
@@ -135,7 +140,7 @@ public class MainWindow extends JFrame
 					ArrayList<String> board_data = play.getBoard();
 					game = dataConvertor.convert(board_data);
 					play.rotate(azimuth);
-					
+					bottom.refresh(Report.Parse(play.getStatistics()));
 					myBoard.repaintMe();
 					try {
 						Thread.sleep(30);
