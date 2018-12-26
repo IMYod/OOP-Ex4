@@ -1,6 +1,10 @@
 package GeoObjects;
 
 import Coords.MyCoords;
+import gui.MainWindow;
+import gui.PanelBoard;
+import guiObjects.Map;
+import guiObjects.Pixel;
 
 public class Box {
 	
@@ -9,53 +13,50 @@ public class Box {
 	private Point3D sw;
 //	private double nothing1;
 //	private double nothing2;
-	MyCoords mc = new MyCoords();
+	private MyCoords mc = new MyCoords();
 	
-	public Box(Point3D ne, int id, Point3D sw, double nothing1, double nothing2){
+	public Box(Point3D point1, int id, Point3D point2, double nothing1, double nothing2){
 		this.id = id;
-		this.ne = ne;
-		this.sw = sw;
 //		this.nothing1 = nothing1;
 //		this.nothing2 = nothing2;
+		
+		sw = point1;
+		ne = point2;
+
 	}
 	
 	public int getId() {
 		return id;
 	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public Point3D getNE() {
+	
+	
+	
+	public Point3D getNe() {
 		return ne;
 	}
-
-	public void setNE(Point3D nw) {
-		this.ne = ne;
-	}
-
-	public Point3D getSW() {
+	
+	public Point3D getSw() {
 		return sw;
 	}
 
-	public void setSW(Point3D sw) {
-		this.sw = sw;
+	public Pixel getPixelNw(PanelBoard board) {
+		Pixel nePixel = board.map.gps2pixel(ne, board.getWidth(), board.getHeight());
+		Pixel swPixel = board.map.gps2pixel(sw, board.getWidth(), board.getHeight());
+		return new Pixel(swPixel.x(), nePixel.y());
 	}
-	
-	public Point3D getNE() {
-		return new Point3D(nw.x(), se.y(), 0);
+
+	public Pixel getPixelSe(PanelBoard board) {
+		Pixel nePixel = board.map.gps2pixel(ne, board.getWidth(), board.getHeight());
+		Pixel swPixel = board.map.gps2pixel(sw, board.getWidth(), board.getHeight());
+		return new Pixel(nePixel.x(), swPixel.y());
 	}
-	public Point3D getSW() {
-		return new Point3D(se.x(), nw.y(), 0);
-	}
-	
-	public double getWidth() {
-		return mc.distance2D(nw, getNE());
-	}
-	
-	public double getHeight() {
-		return mc.distance2D(nw, getSW());
-	}
+
+//	public double getWidth() {
+//		return mc.distance2D(nw, ne);
+//	}
+//	
+//	public double getHeight() {
+//		return mc.distance2D(nw, se);
+//	}
 	
 }

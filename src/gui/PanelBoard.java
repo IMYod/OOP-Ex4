@@ -70,10 +70,10 @@ public class PanelBoard extends JPanel implements MouseListener {
 		//draw boxes
 		g.setColor(Color.BLACK);
 		for (Box box: window.game.boxes) {
-			Pixel pixel = map.gps2pixel(box.getNW(), this.getWidth(), this.getHeight());
-			int width = map.pixelHorizontalDistance(box.getNW(), box.getNE(), this.getWidth(), this.getHeight()); //in pixels
-			int hight = map.pixelVerticalDistance(box.getNW(), box.getSW(), this.getWidth(), this.getHeight()); //in pixels
-			g.fillRect(pixel.x(), pixel.y(), width, hight);
+			Pixel nw = box.getPixelNw(this);
+			int width = map.gps2pixel(box.getNe(), this.getWidth(), this.getHeight()).x() - nw.x();
+			int hight = nw.y() - map.gps2pixel(box.getSw(), this.getWidth(), this.getHeight()).y();
+			g.fillRect(nw.x(), nw.y(), width, hight);
 		}
 
 		//draw fruits

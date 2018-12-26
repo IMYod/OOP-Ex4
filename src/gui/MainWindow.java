@@ -1,4 +1,5 @@
 package gui;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -50,16 +51,19 @@ public class MainWindow extends JFrame
 	public File file;
 
 	private Csv2Game convertor = new Csv2Game();
+
 	////////////////////***Constructors****///////////////////////////////////
 
 	public MainWindow(Map map) 
 	{		
-		initFrame();
+		initMenu();
 		myBoard = new PanelBoard(this, map);
 		initPanels();
 	}
 
-	private void initFrame() 
+////////////////////***Menu Bar****///////////////////////////////////
+	
+	private void initMenu() 
 	{
 		MenuBar menuBar = new MenuBar();
 		Menu newGame = new Menu("new game");

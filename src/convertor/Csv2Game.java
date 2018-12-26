@@ -42,14 +42,14 @@ public class Csv2Game {
 		game =  new AllObjects();
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) 
 		{
-			String[] csvRow; //one row from the csv file, separated
+			
 			String line = ""; //one row from the csv file				
 			line = br.readLine();
 			setTitles(line.split(","));
 
 			while ((line = br.readLine()) != null) //add rows
 			{
-				csvRow = line.split(",");
+				String[] csvRow = line.split(","); //one row from the csv file, separated
 				addData(csvRow); ///add to the sets
 			}
 
