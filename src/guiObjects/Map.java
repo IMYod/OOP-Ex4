@@ -59,7 +59,7 @@ public class Map {
 	 * @param width , width of the map in pixels
 	 * @param height , height of the map in pixels
 	 */
-	public Pixel gps2pixel(Point3D point, int width, int height) { 
+	public Pixel gps2pixel(Point3D point, int widht, int height) { 
 		double imageLatD = nw.x() - se.x();
 		double currentLatD = nw.x() - point.x();
 		double fractionNorth = currentLatD / imageLatD; 
@@ -71,7 +71,7 @@ public class Map {
 		double currentImageLonD = rightMergin.y() - leftMergin.y();
 		double currentLonD = point.y() - leftMergin.y();
 		double fractionWest = currentLonD / currentImageLonD;
-		double lonpixel = fractionWest * width;
+		double lonpixel = fractionWest * widht;
 
 		return new Pixel((int)lonpixel, (int)latpixel);
 	}
@@ -97,7 +97,38 @@ public class Map {
 		
 		return new Point3D(lat, lon, 0);
 	}
-
 	
+	//This functions calculate how many pixels between two points, following the formula:
+	//width or hight of two frame on pixels * (distance between two points / length of right to left (or bottom to top) of the frame)  
+	
+	public int pixelHorizontalDistance (Point3D point1, Point3D point2 ,int widht, int height) {
+		Pixel pixel1 = gps2pixel(point1, widht, height); 
+		Pixel left = new Pixel(0, pixel1.y());
+		Point3D west = pixel2gps(left, widht, height);
+		
+		Pixel pixel2 = gps2pixel(point2, widht, height); 
+		Pixel right = new Pixel(widht, pixel2.y());
+		Point3D east = pixel2gps(right, widht, height);
+		
+		double currentLatDis = mc.distance2D(east, west);
+		double pointsDis = mc.distance2D(point1, point2);
+		
+		return (int)((pointsDis/currentLatDis) * widht);
+	}
+	
+	public int pixelVerticalDistance(Point3D point1, Point3D point2, int widht, int height) {
+		Pixel pixel1 = gps2pixel(point1, widht, height); 
+		Pixel up = new Pixel(pixel1.x(), 0);
+		Point3D north = pixel2gps(up, widht, height);
+		
+		Pixel pixel2 = gps2pixel(point2, widht, height); 
+		Pixel down = new Pixel(pixel1.x(), height);
+		Point3D south = pixel2gps(down, widht, height);
+		
+		double currentLonDis = mc.distance2D(north, south);
+		double pointsDis = mc.distance2D(point1, point2);
+		
+		return (int)((pointsDis/currentLonDis) * widht);
+	}
 	
 }

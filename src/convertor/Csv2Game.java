@@ -104,7 +104,7 @@ public class Csv2Game {
 	 * "F"- fruit.  
 	 * @param csvRow
 	 */
-	private void addData(String[] csvRow)
+	public void addData(String[] csvRow)
 	{
 		
 		Point3D p = new Point3D(Double.parseDouble(csvRow[Lat]),
@@ -115,6 +115,10 @@ public class Csv2Game {
 		else
 			game.fruits.add(new Fruit(p,(int)Double.parseDouble(csvRow[speed]),
 					(int)Double.parseDouble(csvRow[id])));
+	}
+	
+	public AllObjects getGame() {
+		return game;
 	}
 
 }

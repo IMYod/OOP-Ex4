@@ -61,8 +61,18 @@ public class MyCoords implements coords_converter {
 	public double[] azimuth_elevation_dist(Point3D gps0, Point3D gps1) 
 	{	
 		 
-		double azimuth;
+		double azimuth = azimuth(gps0, gps1);
 		
+		double diffAlt = gps1.z()-gps0.z();
+		
+		double distance3D = this.distance3d(gps0, gps1);
+		double elevation = Math.toDegrees(Math.asin(diffAlt/distance3D));
+		
+		double distance2D = this.distance2D(gps0, gps1);
+		return new double[]{azimuth, elevation, distance2D}; 
+	}
+	
+	public double azimuth(Point3D gps0, Point3D gps1) {
 		double lat0Radian = Math.toRadians(gps0.x()); //teta1
 		double lat1Radian = Math.toRadians(gps1.x()); //teta2
 //		double diffLat = gps1.x()-gps0.x();
@@ -72,15 +82,7 @@ public class MyCoords implements coords_converter {
 		
 		double numerator = Math.sin(diffLonRadian) * Math.cos(lat1Radian);
 		double denominator = Math.cos(lat0Radian)*Math.sin(lat1Radian) - Math.sin(lat0Radian)*Math.cos(lat1Radian)*Math.cos(diffLonRadian);
-		azimuth = (Math.toDegrees(Math.atan2(numerator,denominator))+360) % 360;
-		
-		double diffAlt = gps1.z()-gps0.z();
-		
-		double distance3D = this.distance3d(gps0, gps1);
-		double elevation = Math.toDegrees(Math.asin(diffAlt/distance3D));
-		
-		double distance2D = this.distance2D(gps0, gps1);
-		return new double[]{azimuth, elevation, distance2D}; 
+		return (Math.toDegrees(Math.atan2(numerator,denominator))+360) % 360;
 	}
 
 	@Override

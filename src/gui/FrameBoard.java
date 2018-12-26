@@ -11,10 +11,14 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import Coords.MyCoords;
 import GeoObjects.Fruit;
+import GeoObjects.GenericGeoObject;
 import GeoObjects.Ghost;
 import GeoObjects.AllObjects;
+import GeoObjects.Box;
 import GeoObjects.Packman;
+import GeoObjects.Point3D;
 import guiObjects.Line;
 import guiObjects.Map;
 import guiObjects.Pixel;
@@ -22,19 +26,18 @@ import guiObjects.Pixel;
 public class FrameBoard extends JPanel implements MouseListener {
 
 	public MainWindow window;
-	public AllObjects game;
-
 	public Map map;
+
 	private BufferedImage[] fruitsImages;
 	private BufferedImage packmanImage;
 	private BufferedImage ghostImage;
 	private BufferedImage playerImage;
+	public MyCoords mc = new MyCoords();
 
 	public FrameBoard(MainWindow window, Map map) {
 		this.window = window;
 		this.map = map;
 
-		//For painting a random images to the map.
 		fruitsImages = new BufferedImage[6];
 		try {
 			fruitsImages[0] = ImageIO.read( new File("ImagesforGui\\apple.png" ));
@@ -57,27 +60,38 @@ public class FrameBoard extends JPanel implements MouseListener {
 	public void paint(Graphics g)
 	{
 		//draw background
-		g.drawImage(map.myImage,8, 51, this.getWidth(), this.getHeight(), this);
+		g.drawImage(map.myImage,0, 0, this.getWidth(), this.getHeight(), this);
+
+		//draw boxes
+		g.setColor(Color.BLACK);
+		for (Box box: window.game.boxes) {
+			Pixel pixel = map.gps2pixel(box.getNW(), this.getWidth(), this.getHeight());
+			int width = map.pixelHorizontalDistance(box.getNW(), box.getNE(), this.getWidth(), this.getHeight()); //in pixels
+			int hight = map.pixelVerticalDistance(box.getNW(), box.getSW(), this.getWidth(), this.getHeight()); //in pixels
+			g.fillRect(pixel.x(), pixel.y(), width, hight);
+		}
 
 		//draw fruits
-		for (Fruit fruit: game.fruits) {
+		for (Fruit fruit: window.game.fruits) {
 			Pixel pixel = map.gps2pixel(fruit.getLocation(), this.getWidth(), this.getHeight());
 			g.drawImage(fruitsImages[fruit.getRandImage()], pixel.x(), pixel.y(), this );
 		}
 
 		//draw packmans
-		for (Packman packman: game.packmans) {
+		for (Packman packman: window.game.packmans) {
 			Pixel pixel = map.gps2pixel(packman.getLocation(), this.getWidth(), this.getHeight());
 			g.drawImage(packmanImage, pixel.x(), pixel.y(), this);
 		}
 
 		//draw ghosts
-		for (Ghost ghost: game.ghosts) {
+		for (Ghost ghost: window.game.ghosts) {
 			Pixel pixel = map.gps2pixel(ghost.getLocation(), this.getWidth(), this.getHeight());
 			g.drawImage(ghostImage, pixel.x(), pixel.y(), this);
 		}
 
-
+		//draw player
+		Pixel pixel = map.gps2pixel(window.game.player.getLocation(), this.getWidth(), this.getHeight());
+		g.drawImage(playerImage, pixel.x(), pixel.y(), this);
 	}
 
 
@@ -89,8 +103,24 @@ public class FrameBoard extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		switch (window.press) {
+		case FIRST_LOCATION:
+			Point3D pointToStart = map.pixel2gps(new Pixel(e.getX(),  e.getY()), this.getWidth(), this.getHeight());
+			window.play.setInitLocation(pointToStart.x(), pointToStart.y()); //check it! maybe we need to swap them
+			window.press = Press.GO;
+			window.startManuelGame();
+			break;
 
+		case GO:
+			Point3D pointToGo = map.pixel2gps(new Pixel(e.getX(),  e.getY()), this.getWidth(), this.getHeight());
+			double azimuth = mc.azimuth(window.game.player.getLocation(), pointToGo);
+			window.game.player.setAzimuth(azimuth);
+			window.play.rotate(azimuth);			
+			break;
+
+		default: //NOTHING
+			break;
+		}
 	}
 
 	@Override
@@ -101,8 +131,9 @@ public class FrameBoard extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		if (window.press == Press.FIRST_LOCATION) {
+			this.getGraphics().drawImage(playerImage, e.getX(), e.getY(), this);
+		}
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class AllObjects {
 	public Set <Fruit> fruits = new HashSet<Fruit>();
 	public Set <Packman> packmans = new HashSet<Packman>();
 	public Set <Ghost> ghosts = new HashSet<Ghost>();
-	public Set <Box> boxs = new HashSet<Box>();
+	public Set <Box> boxes = new HashSet<Box>();
 	public Player player;
 	
 	// clears all the objects from the game.
@@ -24,8 +24,10 @@ public class AllObjects {
 		fruits.clear();
 		packmans.clear();
 		ghosts.clear();
-		boxs.clear();
+		boxes.clear();
 	}
+	
+	public void boardToGame
 	
 }
 

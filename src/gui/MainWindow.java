@@ -21,15 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Coords.MyCoords;
+import GeoObjects.AllObjects;
 import GeoObjects.Fruit;
 import GeoObjects.Packman;
 import GeoObjects.Point3D;
+import Robot.Play;
 import convertor.Csv2Game;
-import convertor.Game2Csv;
-import convertor.Game2kml;
-import gameObjects.Game;
-import gameObjects.Path;
-import gameObjects.PathPoint;
+import convertor.Report;
 import guiObjects.Pixel;
 import guiObjects.Line;
 import guiObjects.Map;
@@ -45,104 +43,104 @@ import guiObjects.Map;
 public class MainWindow extends JFrame
 {
 	public FrameBoard myBoard; 
-	
-////////////////////***Constructors****///////////////////////////////////
+	public AllObjects game;
+	public Press press = Press.NOTHING;
+	public Play play;
+	public File file;
+
+	private Csv2Game convertor = new Csv2Game();
+	////////////////////***Constructors****///////////////////////////////////
 
 	public MainWindow(Map map) 
 	{		
+		initFrame();
 		myBoard = new FrameBoard(this, map);
-		initFrame();		
+		initPanels();
 	}
 
 	private void initFrame() 
 	{
+		MenuBar menuBar = new MenuBar();
+		Menu newGame = new Menu("new game");
 
+		MenuItem importGame = new MenuItem("import");
+		importGame.addActionListener(new ActionListener() {		
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				importCsv();
+			}
+		});
 
+		MenuItem tryAgain = new MenuItem("try again");
+		tryAgain.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				newGame();
+			}
+		});
 
-///////////////////////***Mouse Listeners****//////////////////////////////
-	
-	@Override
-	public void mouseClicked(MouseEvent arg) {
-		Pixel pixel = new Pixel(arg.getX()-8, arg.getY()-51);
-		System.out.println(pixel);
-		if (addFruit) {
-			Fruit fruit = new Fruit(map.pixel2gps(pixel, this.getWidth()-16, this.getHeight()-59), 1,
-					game.fruits.size()+1);
-			game.fruits.add(fruit);
-			game.calculated = false;
-			repaint();
-		}
-		if (addPackman) {
-			AddPackman adder = new AddPackman(this, map.pixel2gps(pixel, this.getWidth()-16, this.getHeight()-59),
-					game.getNextPackmanID());
-		}
+		newGame.add(importGame);
+		newGame.add(tryAgain);
+		menuBar.add(newGame);
 	}
 
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+	private void initPanels() {
+		this.add("center", myBoard);
 	}
 
 	public boolean importCsv() {
 		JFileChooser fc = new JFileChooser();
-		Csv2Game convertor = new Csv2Game();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV files", "csv");
 		fc.setFileFilter(filter);
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			myBoard.game = convertor.convert(file);
+			file = fc.getSelectedFile();
+			newGame();
+			chooseLocation();
 			return true;
 		}
 		return false;
 	}
 
-	private int randNumber() {
-		return (int)(Math.random()*100000000);
+	private void newGame() {
+		if (file == null)
+			return;
+		play = new Play(file.getAbsolutePath());
+		game = convertor.convert(file);
+		chooseLocation();
+	}
+
+	public void startManuelGame() {
+		press = Press.GO;
+		play.start();
+		boolean continueGame = true;
+		while (continueGame) {
+			Report report = Report.Parse(play.getStatistics());
+			//refresh the bottom menu!
+			if (report.getTimeLeft() <= 0)
+				continueGame = false;
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		press = Press.NOTHING;
+		
+		// print the data & save to the course DB
+		System.out.println("**** Done Game (user stop) ****");	
+		String info = play.getStatistics();
+		System.out.println(info);
+	}
+
+	private void chooseLocation() {
+		press = Press.FIRST_LOCATION;
 	}
 
 	public void clear() {
 		// TODO Auto-generated method stub
-		myBoard.game.clear();
-	}
-
-	public void startPoint() {///kind of clear
-		for (Packman packman: game.packmans) {
-			packman.setLocation(packman.getStartLocation());
-		}
-		lines.clear();
-		repaint();
-	}
-	
-	public void stopRunning() {
-		if (stopRunning)
-			return;
-		stopRunning=true;
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		game.clear();
 	}
 
 }
