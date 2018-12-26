@@ -18,8 +18,7 @@ public class Box {
 	public Box(Point3D point1, int id, Point3D point2, double nothing1, double nothing2){
 		this.id = id;
 //		this.nothing1 = nothing1;
-//		this.nothing2 = nothing2;
-		
+//		this.nothing2 = nothing2;	
 		sw = point1;
 		ne = point2;
 

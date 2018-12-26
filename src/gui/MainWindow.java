@@ -50,6 +50,7 @@ public class MainWindow extends JFrame
 	public Press press = Press.NOTHING;
 	public Play play;
 	public File file;
+	double azimuth = 0;
 
 	private Csv2Game convertor = new Csv2Game();
 	private Data2Game dataConvertor = new Data2Game();
@@ -133,7 +134,8 @@ public class MainWindow extends JFrame
 						continueGame = false;
 					ArrayList<String> board_data = play.getBoard();
 					game = dataConvertor.convert(board_data);
-					play.rotate(game.player.getAzimuth());
+					play.rotate(azimuth);
+					
 					myBoard.repaintMe();
 					try {
 						Thread.sleep(30);

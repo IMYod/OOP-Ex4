@@ -71,8 +71,9 @@ public class PanelBoard extends JPanel implements MouseListener {
 		g.setColor(Color.BLACK);
 		for (Box box: window.game.boxes) {
 			Pixel nw = box.getPixelNw(this);
+//			System.out.println(nw);
 			int width = map.gps2pixel(box.getNe(), this.getWidth(), this.getHeight()).x() - nw.x();
-			int hight = nw.y() - map.gps2pixel(box.getSw(), this.getWidth(), this.getHeight()).y();
+			int hight = map.gps2pixel(box.getSw(), this.getWidth(), this.getHeight()).y() - nw.y();
 			g.fillRect(nw.x(), nw.y(), width, hight);
 		}
 
@@ -119,7 +120,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 		case GO:
 			Point3D pointToGo = map.pixel2gps(new Pixel(e.getX(),  e.getY()), this.getWidth(), this.getHeight());
 			double azimuth = mc.azimuth(window.game.player.getLocation(), pointToGo);
-			window.game.player.setAzimuth(azimuth);
+			window.azimuth = azimuth;
 			window.play.rotate(azimuth);
 			break;
 

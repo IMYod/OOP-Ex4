@@ -75,15 +75,14 @@ public class MyCoords implements coords_converter {
 	public double azimuth(Point3D gps0, Point3D gps1) {
 		double lat0Radian = Math.toRadians(gps0.x()); //teta1
 		double lat1Radian = Math.toRadians(gps1.x()); //teta2
-//		double diffLat = gps1.x()-gps0.x();
 		double diffLon = gps1.y()-gps0.y();
-//		double diffLatRadian = Math.toRadians(diffLat);
 		double diffLonRadian = Math.toRadians(diffLon);  //delta2
 		
 		double numerator = Math.sin(diffLonRadian) * Math.cos(lat1Radian);
 		double denominator = Math.cos(lat0Radian)*Math.sin(lat1Radian) - Math.sin(lat0Radian)*Math.cos(lat1Radian)*Math.cos(diffLonRadian);
 		return (Math.toDegrees(Math.atan2(numerator,denominator))+360) % 360;
 	}
+	
 
 	@Override
 	public boolean isValid_GPS_Point(Point3D p) {
