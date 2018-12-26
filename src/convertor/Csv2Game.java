@@ -10,6 +10,7 @@ import GeoObjects.Box;
 import GeoObjects.Fruit;
 import GeoObjects.Ghost;
 import GeoObjects.Packman;
+import GeoObjects.Player;
 import GeoObjects.Point3D;
 /**
  * This class takes a csv file, with a data of the game, and making the game.
@@ -42,7 +43,7 @@ public class Csv2Game {
 		game =  new AllObjects();
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) 
 		{
-			
+
 			String line = ""; //one row from the csv file				
 			line = br.readLine();
 			setTitles(line.split(","));
@@ -70,7 +71,7 @@ public class Csv2Game {
 				Type = i;
 				break;
 
-			case "id":
+			case "ID":
 				id = i;
 				break;
 
@@ -112,35 +113,35 @@ public class Csv2Game {
 
 		Point3D point1 = new Point3D(Double.parseDouble(csvRow[Lat]),
 				Double.parseDouble(csvRow[Lon]),Double.parseDouble(csvRow[Alt]));
-		switch (csvRow[Type]) {
-		case "P":
+		if (csvRow[Type].equals("P"))
 			game.packmans.add(new Packman(point1, (int)Double.parseDouble(csvRow[id]), Double.parseDouble(csvRow[speed]),
 					Double.parseDouble(csvRow[radius])));
-			break;
-			
-		case "F":
-			game.fruits.add(new Fruit(point1, (int)Double.parseDouble(csvRow[id]), Double.parseDouble(csvRow[speed]),
-					Double.parseDouble(csvRow[radius])));
-			break;
-			
-		case "G":
+		else if (csvRow[Type].equals("F"))
+			game.fruits.add(new Fruit(point1, (int)Double.parseDouble(csvRow[id]), Double.parseDouble(csvRow[speed])));
+
+		else if (csvRow[Type].equals("G"))
 			game.ghosts.add(new Ghost(point1, (int)Double.parseDouble(csvRow[id]), Double.parseDouble(csvRow[speed]),
 					Double.parseDouble(csvRow[radius])));
-			break;
-			
-		case "B":
+
+		else if (csvRow[Type].equals("B")) {
 			Point3D point2 = new Point3D(Double.parseDouble(csvRow[speed]),
 					Double.parseDouble(csvRow[radius]),0);
 			game.boxes.add(new Box(point1, (int)Double.parseDouble(csvRow[id]), point2, 0.0, 0.0));
-			break;
-			
-		default:
-			break;
-		}	
+		}
+		
+		else if (csvRow[Type].equals("M")) {
+			game.player = new Player(point1);
+		}
 	}
 
 	public AllObjects getGame() {
 		return game;
 	}
+	
+	public void setGame(AllObjects game) {
+		this.game = game;
+	}
+	
+	
 
 }

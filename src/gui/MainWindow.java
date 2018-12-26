@@ -29,6 +29,7 @@ import GeoObjects.Packman;
 import GeoObjects.Point3D;
 import Robot.Play;
 import convertor.Csv2Game;
+import convertor.Data2Game;
 import gameData.Report;
 import guiObjects.Pixel;
 import guiObjects.Line;
@@ -51,6 +52,7 @@ public class MainWindow extends JFrame
 	public File file;
 
 	private Csv2Game convertor = new Csv2Game();
+	private Data2Game dataConvertor = new Data2Game();
 
 	////////////////////***Constructors****///////////////////////////////////
 
@@ -61,8 +63,8 @@ public class MainWindow extends JFrame
 		initPanels();
 	}
 
-////////////////////***Menu Bar****///////////////////////////////////
-	
+	////////////////////***Menu Bar****///////////////////////////////////
+
 	private void initMenu() 
 	{
 		MenuBar menuBar = new MenuBar();
@@ -103,7 +105,6 @@ public class MainWindow extends JFrame
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = fc.getSelectedFile();
 			newGame();
-			chooseLocation();
 			return true;
 		}
 		return false;
@@ -119,33 +120,38 @@ public class MainWindow extends JFrame
 
 	public void startManuelGame() {
 		press = Press.GO;
-		play.start();
-		boolean continueGame = true;
-		while (continueGame) {
-			Report report = Report.Parse(play.getStatistics());
-			//refresh the bottom menu!
-			if (report.getTimeLeft() <= 0)
-				continueGame = false;
-			String[] titles = {"Type","ID","Lat","Lon","Alt","Speed/Weight","Radius"};
-			convertor.setTitles(titles);
-//			setTitles
-			ArrayList<String> board_data = play.getBoard();
-			for(int i=0;i<board_data.size();i++) {
-				
-			}
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		press = Press.NOTHING;
+		Thread startGame = new Thread(new Runnable() {
 
-		// print the data & save to the course DB
-		System.out.println("**** Done Game (user stop) ****");	
-		String info = play.getStatistics();
-		System.out.println(info);
+			@Override
+			public void run() {
+				play.start();
+				boolean continueGame = true;
+				while (continueGame) {
+					Report report = Report.Parse(play.getStatistics());
+					//refresh the bottom menu!
+					if (report.getTimeLeft() <= 0)
+						continueGame = false;
+					ArrayList<String> board_data = play.getBoard();
+					game = dataConvertor.convert(board_data);
+					play.rotate(game.player.getAzimuth());
+					myBoard.repaintMe();
+					try {
+						Thread.sleep(30);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				press = Press.NOTHING;
+
+				// print the data & save to the course DB
+				System.out.println("**** Done Game (user stop) ****");	
+				String info = play.getStatistics();
+				System.out.println(info);
+			}
+		});
+		startGame.start();
 	}
 
 	private void chooseLocation() {

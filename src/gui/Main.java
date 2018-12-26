@@ -10,7 +10,7 @@ import guiObjects.Map;
  * Yoav and Elad.
  * @version 1.0
  * GitHub 
- * https://github.com/NviCoder/OOP_Ex3
+ * https://github.com/IMYod/OOP_Ex4
  * Commit:  
  */
 public class Main 

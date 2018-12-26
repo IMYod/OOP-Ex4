@@ -29,8 +29,6 @@ public class Box {
 		return id;
 	}
 	
-	
-	
 	public Point3D getNe() {
 		return ne;
 	}

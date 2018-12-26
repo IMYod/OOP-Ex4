@@ -108,11 +108,11 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+	
 		switch (window.press) {
 		case FIRST_LOCATION:
 			Point3D pointToStart = map.pixel2gps(new Pixel(e.getX(),  e.getY()), this.getWidth(), this.getHeight());
 			window.play.setInitLocation(pointToStart.x(), pointToStart.y()); //check it! maybe we need to swap them
-			window.press = Press.GO;
 			window.startManuelGame();
 			break;
 
@@ -120,7 +120,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 			Point3D pointToGo = map.pixel2gps(new Pixel(e.getX(),  e.getY()), this.getWidth(), this.getHeight());
 			double azimuth = mc.azimuth(window.game.player.getLocation(), pointToGo);
 			window.game.player.setAzimuth(azimuth);
-			window.play.rotate(azimuth);			
+			window.play.rotate(azimuth);
 			break;
 
 		default: //NOTHING
@@ -136,15 +136,19 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		if (window.press == Press.FIRST_LOCATION) {
-			this.getGraphics().drawImage(playerImage, e.getX(), e.getY(), this);
-		}
+//		if (window.press == Press.FIRST_LOCATION) {
+//			this.getGraphics().drawImage(playerImage, e.getX(), e.getY(), this);
+//		}
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void repaintMe() {
+		paintImmediately(0, 0, this.getWidth(), this.getHeight());
 	}
 
 }
