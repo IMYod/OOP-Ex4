@@ -2,8 +2,6 @@ package GeoObjects;
 
 import java.util.HashSet;
 import java.util.Set;
-import GeoObjects.Fruit;
-import GeoObjects.Packman;
 
 
 /**
@@ -26,8 +24,6 @@ public class AllObjects {
 		ghosts.clear();
 		boxes.clear();
 	}
-	
-	public void boardToGame
 	
 }
 

@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import javax.imageio.ImageIO;
@@ -27,7 +28,7 @@ import GeoObjects.Packman;
 import GeoObjects.Point3D;
 import Robot.Play;
 import convertor.Csv2Game;
-import convertor.Report;
+import gameData.Report;
 import guiObjects.Pixel;
 import guiObjects.Line;
 import guiObjects.Map;
@@ -42,7 +43,7 @@ import guiObjects.Map;
  */
 public class MainWindow extends JFrame
 {
-	public FrameBoard myBoard; 
+	public PanelBoard myBoard; 
 	public AllObjects game;
 	public Press press = Press.NOTHING;
 	public Play play;
@@ -54,7 +55,7 @@ public class MainWindow extends JFrame
 	public MainWindow(Map map) 
 	{		
 		initFrame();
-		myBoard = new FrameBoard(this, map);
+		myBoard = new PanelBoard(this, map);
 		initPanels();
 	}
 
@@ -82,10 +83,12 @@ public class MainWindow extends JFrame
 		newGame.add(importGame);
 		newGame.add(tryAgain);
 		menuBar.add(newGame);
+		this.setMenuBar(menuBar);
 	}
 
 	private void initPanels() {
-		this.add("center", myBoard);
+		this.add(myBoard);
+		myBoard.setVisible(true);
 	}
 
 	public boolean importCsv() {
@@ -119,6 +122,13 @@ public class MainWindow extends JFrame
 			//refresh the bottom menu!
 			if (report.getTimeLeft() <= 0)
 				continueGame = false;
+			String[] titles = {"Type","ID","Lat","Lon","Alt","Speed/Weight","Radius"};
+			convertor.setTitles(titles);
+//			setTitles
+			ArrayList<String> board_data = play.getBoard();
+			for(int i=0;i<board_data.size();i++) {
+				
+			}
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
@@ -127,7 +137,7 @@ public class MainWindow extends JFrame
 			}
 		}
 		press = Press.NOTHING;
-		
+
 		// print the data & save to the course DB
 		System.out.println("**** Done Game (user stop) ****");	
 		String info = play.getStatistics();

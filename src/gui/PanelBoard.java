@@ -23,7 +23,7 @@ import guiObjects.Line;
 import guiObjects.Map;
 import guiObjects.Pixel;
 
-public class FrameBoard extends JPanel implements MouseListener {
+public class PanelBoard extends JPanel implements MouseListener {
 
 	public MainWindow window;
 	public Map map;
@@ -34,7 +34,7 @@ public class FrameBoard extends JPanel implements MouseListener {
 	private BufferedImage playerImage;
 	public MyCoords mc = new MyCoords();
 
-	public FrameBoard(MainWindow window, Map map) {
+	public PanelBoard(MainWindow window, Map map) {
 		this.window = window;
 		this.map = map;
 
@@ -47,8 +47,8 @@ public class FrameBoard extends JPanel implements MouseListener {
 			fruitsImages[4] = ImageIO.read( new File("ImagesforGui\\peach.png" ));
 			fruitsImages[5] = ImageIO.read( new File("ImagesforGui\\watermalon.png" ));
 			packmanImage = ImageIO.read( new File("ImagesforGui\\thePackman2.png" ));
-			ghostImage =  ImageIO.read( new File("ImagesforGui\\ghost.jpg" ));
-			playerImage =  ImageIO.read( new File("ImagesforGui\\layer.jpg" ));
+			ghostImage =  ImageIO.read( new File("ImagesforGui\\ghost.png" ));
+			playerImage =  ImageIO.read( new File("ImagesforGui\\player.png" ));
 		} catch (IOException exc) {
 			System.out.println(exc.toString());
 		}
@@ -59,8 +59,13 @@ public class FrameBoard extends JPanel implements MouseListener {
 
 	public void paint(Graphics g)
 	{
+		this.setSize(window.getWidth()-16, window.getHeight()-59); //check this numbers!!
+		
 		//draw background
 		g.drawImage(map.myImage,0, 0, this.getWidth(), this.getHeight(), this);
+		
+		if (window.game == null)
+			return;
 
 		//draw boxes
 		g.setColor(Color.BLACK);

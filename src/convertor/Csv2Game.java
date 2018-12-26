@@ -6,10 +6,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import GeoObjects.AllObjects;
+import GeoObjects.Box;
 import GeoObjects.Fruit;
+import GeoObjects.Ghost;
 import GeoObjects.Packman;
 import GeoObjects.Point3D;
-import gameObjects.Game;
 /**
  * This class takes a csv file, with a data of the game, and making the game.
  * The Game will show on the map. 
@@ -17,13 +18,12 @@ import gameObjects.Game;
  *
  */
 public class Csv2Game {
-	
+
 	private AllObjects game;
 	private File file;
 	private String csvName;
-	private String[] title;
 	private int Type, id, Lat, Lon, Alt, speed, radius;
-	
+
 	public AllObjects convert(String fileName) {
 		file = new File(fileName);
 		csvName = fileName;
@@ -45,44 +45,7 @@ public class Csv2Game {
 			String[] csvRow; //one row from the csv file, separated
 			String line = ""; //one row from the csv file				
 			line = br.readLine();
-			title = line.split(",");
-
-			for (int i=0; i<title.length; i++)
-			{
-				switch (title[i])
-				{
-				case "Type":
-					Type = i;
-					break;
-
-				case "id":
-					id = i;
-					break;
-
-				case "Lat":
-					Lat = i;
-					break;
-
-				case "Lon":
-					Lon = i;
-					break;
-					
-				case "Alt":
-					Alt = i;
-					break;
-
-				case "Speed/Weight":
-					speed = i;
-					break;
-
-				case "Radius":
-					radius = i;
-					break;
-
-				default:
-					break;
-				}
-			}
+			setTitles(line.split(","));
 
 			while ((line = br.readLine()) != null) //add rows
 			{
@@ -90,13 +53,53 @@ public class Csv2Game {
 				addData(csvRow); ///add to the sets
 			}
 
-		} catch (IOException e) 
-
+		}
+		catch (IOException e) 
 		{
 			e.printStackTrace();
 		}	
 
 	}
+
+	public void setTitles(String[] input) {
+		for (int i=0; i<input.length; i++)
+		{
+			switch (input[i])
+			{
+			case "Type":
+				Type = i;
+				break;
+
+			case "id":
+				id = i;
+				break;
+
+			case "Lat":
+				Lat = i;
+				break;
+
+			case "Lon":
+				Lon = i;
+				break;
+
+			case "Alt":
+				Alt = i;
+				break;
+
+			case "Speed/Weight":
+				speed = i;
+				break;
+
+			case "Radius":
+				radius = i;
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+
 	/**
 	 * This function knows to add a fruit or packman to their Collections.
 	 * The value that distinguishes is the "Type":
@@ -106,17 +109,36 @@ public class Csv2Game {
 	 */
 	public void addData(String[] csvRow)
 	{
-		
-		Point3D p = new Point3D(Double.parseDouble(csvRow[Lat]),
+
+		Point3D point1 = new Point3D(Double.parseDouble(csvRow[Lat]),
 				Double.parseDouble(csvRow[Lon]),Double.parseDouble(csvRow[Alt]));
-		if (csvRow[Type].equals("P"))
-			game.packmans.add(new Packman(p,(int)Double.parseDouble(csvRow[speed]),
-					(int)Double.parseDouble(csvRow[radius]),(int)Double.parseDouble(csvRow[id])));
-		else
-			game.fruits.add(new Fruit(p,(int)Double.parseDouble(csvRow[speed]),
-					(int)Double.parseDouble(csvRow[id])));
+		switch (csvRow[Type]) {
+		case "P":
+			game.packmans.add(new Packman(point1, (int)Double.parseDouble(csvRow[id]), Double.parseDouble(csvRow[speed]),
+					Double.parseDouble(csvRow[radius])));
+			break;
+			
+		case "F":
+			game.fruits.add(new Fruit(point1, (int)Double.parseDouble(csvRow[id]), Double.parseDouble(csvRow[speed]),
+					Double.parseDouble(csvRow[radius])));
+			break;
+			
+		case "G":
+			game.ghosts.add(new Ghost(point1, (int)Double.parseDouble(csvRow[id]), Double.parseDouble(csvRow[speed]),
+					Double.parseDouble(csvRow[radius])));
+			break;
+			
+		case "B":
+			Point3D point2 = new Point3D(Double.parseDouble(csvRow[speed]),
+					Double.parseDouble(csvRow[radius]),0);
+			game.boxes.add(new Box(point1, (int)Double.parseDouble(csvRow[id]), point2, 0.0, 0.0));
+			break;
+			
+		default:
+			break;
+		}	
 	}
-	
+
 	public AllObjects getGame() {
 		return game;
 	}

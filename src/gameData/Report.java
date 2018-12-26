@@ -1,4 +1,4 @@
-package convertor;
+package gameData;
 
 public class Report {
 	

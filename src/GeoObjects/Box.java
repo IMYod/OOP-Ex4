@@ -5,16 +5,16 @@ import Coords.MyCoords;
 public class Box {
 	
 	private int id;
-	private Point3D nw;
-	private Point3D se;
+	private Point3D ne;
+	private Point3D sw;
 //	private double nothing1;
 //	private double nothing2;
 	MyCoords mc = new MyCoords();
 	
-	Box(int id, Point3D nw, Point3D se, double nothing1, double nothing2){
+	public Box(Point3D ne, int id, Point3D sw, double nothing1, double nothing2){
 		this.id = id;
-		this.nw = nw;
-		this.se = se;
+		this.ne = ne;
+		this.sw = sw;
 //		this.nothing1 = nothing1;
 //		this.nothing2 = nothing2;
 	}
@@ -27,20 +27,20 @@ public class Box {
 		this.id = id;
 	}
 
-	public Point3D getNW() {
-		return nw;
+	public Point3D getNE() {
+		return ne;
 	}
 
-	public void setNW(Point3D nw) {
-		this.nw = nw;
+	public void setNE(Point3D nw) {
+		this.ne = ne;
 	}
 
-	public Point3D getSE() {
-		return se;
+	public Point3D getSW() {
+		return sw;
 	}
 
-	public void setSE(Point3D se) {
-		this.se = se;
+	public void setSW(Point3D sw) {
+		this.sw = sw;
 	}
 	
 	public Point3D getNE() {
