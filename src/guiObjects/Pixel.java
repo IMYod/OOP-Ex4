@@ -13,6 +13,7 @@ public class Pixel {
 
 	public Pixel(int x, int y) {
 		if (x<0 || y<0) {
+//			System.out.println("out of bounds");
 			x = Math.max(0, x);
 			y = Math.max(0, y);
 		}
@@ -32,6 +33,16 @@ public class Pixel {
 	
 	public String toString() {
 		return "(" + x + ", " + y + ")";
+	}
+	
+	public double distance(Pixel other) {
+		int dx = other.x-x;
+		int dy = other.y-y;
+		return Math.sqrt(dx*dx+dy*dy);
+	}
+	
+	public boolean equals(Pixel other) {
+		return (x==other.x && y==other.y);
 	}
 
 }

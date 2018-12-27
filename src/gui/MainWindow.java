@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -28,12 +29,14 @@ import GeoObjects.Fruit;
 import GeoObjects.Packman;
 import GeoObjects.Point3D;
 import Robot.Play;
+import algorithm.Shortest;
 import convertor.Csv2Game;
 import convertor.Data2Game;
 import gameData.Report;
 import guiObjects.Pixel;
 import guiObjects.Line;
 import guiObjects.Map;
+import guiObjects.Path;
 
 /**
  * This class is the main window of the GUI.
@@ -97,9 +100,10 @@ public class MainWindow extends JFrame
 	private void initPanels() {
 		this.add("Center", myBoard);
 		myBoard.setVisible(true);
-		
+
 		bottom = new PanelBottom(this);
 		add("South", bottom);
+		bottom.setSize(this.getWidth(), 50);
 		bottom.setVisible(true);
 	}
 
@@ -148,8 +152,20 @@ public class MainWindow extends JFrame
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+
+					Shortest algo = new Shortest(game, myBoard);
+					if (game.player != null && !game.fruits.isEmpty()) {
+						Path path = algo.findPath(myBoard.map.gps2pixel(game.player.getLocation(), myBoard.getWidth(), myBoard.getHeight()),
+								myBoard.map.gps2pixel(game.fruits.iterator().next().getLocation(), myBoard.getWidth(), myBoard.getHeight()));
+						if (path != null) {
+							Iterator<Pixel> it = path.iterator();
+							azimuth = myBoard.mc.azimuth(myBoard.map.pixel2gps(it.next(), myBoard.getWidth(), myBoard.getHeight()),
+									myBoard.map.pixel2gps(it.next(), myBoard.getWidth(), myBoard.getHeight()));				
+							play.rotate(azimuth);
+						}
+					}
 				}
-				
+
 				press = Press.NOTHING;
 
 				// print the data & save to the course DB

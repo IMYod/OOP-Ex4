@@ -130,7 +130,8 @@ public class Csv2Game {
 		}
 		
 		else if (csvRow[Type].equals("M")) {
-			game.player = new Player(point1);
+			game.player = new Player(point1, (int)Double.parseDouble(csvRow[id]), Double.parseDouble(csvRow[speed]),
+					Double.parseDouble(csvRow[radius]));
 		}
 	}
 

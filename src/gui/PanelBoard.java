@@ -59,12 +59,12 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	public void paint(Graphics g)
 	{
-//		this.setSize(window.getWidth()-16, window.getHeight()-59); //check this numbers!!
+		//		this.setSize(window.getWidth()-16, window.getHeight()-59); //check this numbers!!
 		this.setSize(window.getWidth()-16, window.getHeight()-90); //check this numbers!!
-		
+
 		//draw background
 		g.drawImage(map.myImage,0, 0, this.getWidth(), this.getHeight(), this);
-		
+
 		if (window.game == null)
 			return;
 
@@ -72,7 +72,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 		g.setColor(Color.BLACK);
 		for (Box box: window.game.boxes) {
 			Pixel nw = box.getPixelNw(this);
-//			System.out.println(nw);
+			//			System.out.println(nw);
 			int width = map.gps2pixel(box.getNe(), this.getWidth(), this.getHeight()).x() - nw.x();
 			int hight = map.gps2pixel(box.getSw(), this.getWidth(), this.getHeight()).y() - nw.y();
 			g.fillRect(nw.x(), nw.y(), width, hight);
@@ -97,10 +97,11 @@ public class PanelBoard extends JPanel implements MouseListener {
 		}
 
 		//draw player
-		Pixel pixel = map.gps2pixel(window.game.player.getLocation(), this.getWidth(), this.getHeight());
-		g.drawImage(playerImage, pixel.x(), pixel.y(), this);
+		if (window.game.player != null) {
+			Pixel pixel = map.gps2pixel(window.game.player.getLocation(), this.getWidth(), this.getHeight());
+			g.drawImage(playerImage, pixel.x(), pixel.y(), this);
+		}
 	}
-
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -110,7 +111,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-	
+
 		switch (window.press) {
 		case FIRST_LOCATION:
 			Point3D pointToStart = map.pixel2gps(new Pixel(e.getX(),  e.getY()), this.getWidth(), this.getHeight());
@@ -138,9 +139,9 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-//		if (window.press == Press.FIRST_LOCATION) {
-//			this.getGraphics().drawImage(playerImage, e.getX(), e.getY(), this);
-//		}
+		//		if (window.press == Press.FIRST_LOCATION) {
+		//			this.getGraphics().drawImage(playerImage, e.getX(), e.getY(), this);
+		//		}
 	}
 
 	@Override
@@ -148,7 +149,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public void repaintMe() {
 		paintImmediately(0, 0, this.getWidth(), this.getHeight());
 	}

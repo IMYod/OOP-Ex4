@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.Label;
 
 import javax.swing.JPanel;
@@ -22,9 +23,11 @@ public class PanelBottom extends JPanel {
 
 	private void initPanel() {
 		add(score);
-		add(timeLeft);
-		add(killByGhosts);
-		add(outOfBox);
+//		score.setBounds(0, 0, 200, this.getHeight());
+		score.setMinimumSize(new Dimension(200, 40));
+//		add(timeLeft);
+//		add(killByGhosts);
+//		add(outOfBox);
 	}
 	
 	public void refresh(Report report) {
