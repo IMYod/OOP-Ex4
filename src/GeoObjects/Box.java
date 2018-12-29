@@ -44,8 +44,8 @@ public class Box {
 		Pixel[] corners = new Pixel[4];
 		corners[0] = getPixelNe(board);
 		corners[1] = getPixelNw(board);
-		corners[2] = getPixelSe(board);
-		corners[3] = getPixelSw(board);
+		corners[2] = getPixelSw(board);
+		corners[3] = getPixelSe(board);
 		return corners;
 	}
 	

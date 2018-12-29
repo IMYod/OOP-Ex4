@@ -7,36 +7,62 @@ public class Line {
 	
 	double m; //slope
 	double n; //y-intercept
+	boolean vertical;  //parallel to the y-axis
 	
 	public Line(double m, double n) {
 		this.m = m;
 		this.n= n;
+		vertical = (m!= Double.MAX_VALUE && m != Double.MIN_VALUE);
 	}
 	
 	public Line(Line other) {
 		this(other.m, other.n);
+		vertical = other.vertical;
 	}
 	
 	//calculate line equation by two points
 	public Line(Pixel p0, Pixel p1) {
 		if (p1.x() == p0.x()) { //parallel to the y-axis
 			m = Double.MAX_VALUE;
+			n = -p1.x(); //when n=x': x-x'=0
+			vertical = true;
 		}
-		else
+		else {
 			m = (p1.y() - p0.y())/(double)(p1.x()-p0.x());
-		n = p1.y()-m*p1.x();
+			n = p1.y()-m*p1.x();
+			vertical = false;
+		}
 	}
 	
 	public Pixel cuttingPoint(Line other) {
+		double x;
+		double y;
 		if (m == other.m) {
 			if (n == other.n) //Lines converge
 				return new Pixel(Integer.MAX_VALUE, Integer.MAX_VALUE);
 			else //parallel lines
 				return null;
 		}
-		double x = (other.n-n)/(m-other.m);
-		double y = m*x + n;
-		return new Pixel((int)x, (int)y);
+
+		// If one of them is vertical, I will assign the x value to other
+		if (vertical) {
+			if (other.vertical)
+				return null;
+			else {
+				x = -n;
+				y = other.m*x + other.n;
+			}
+				
+		}
+		else if (other.vertical) {
+			x = -other.n;
+			y = m*x + n;
+		}
+		else{ //It is neither vertical nor other vertical
+			x = (other.n-n)/(m-other.m);
+			y = m*x + n;
+		}
+		return new Pixel((int)(x+0.001), (int)(y+0.001));
 	}
 
 	public double getM() {
@@ -45,6 +71,13 @@ public class Line {
 
 	public double getN() {
 		return n;
+	}
+	
+	public String toString() {
+		if (vertical)
+			return "x="+(-n);
+		else
+			return "y="+m+"*x+"+n;
 	}
 
 }

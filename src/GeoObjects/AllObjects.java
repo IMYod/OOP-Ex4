@@ -3,6 +3,8 @@ package GeoObjects;
 import java.util.HashSet;
 import java.util.Set;
 
+import guiObjects.Pixel;
+
 
 /**
  * A class that includes a collection of fruit and a collection of robots, 
@@ -16,6 +18,7 @@ public class AllObjects {
 	public Set <Ghost> ghosts = new HashSet<Ghost>();
 	public Set <Box> boxes = new HashSet<Box>();
 	public Player player;
+
 	
 	// clears all the objects from the game.
 	public void clear() {	

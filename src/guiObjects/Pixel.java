@@ -41,8 +41,11 @@ public class Pixel {
 		return Math.sqrt(dx*dx+dy*dy);
 	}
 	
-	public boolean equals(Pixel other) {
-		return (x==other.x && y==other.y);
+	public boolean equals(Object other) {
+		if (other instanceof Pixel) {
+			return (x==((Pixel)other).x && y==((Pixel)other).y);
+		}
+		return false;
 	}
 
 }

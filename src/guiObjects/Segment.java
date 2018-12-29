@@ -1,12 +1,13 @@
 package guiObjects;
 
-public class Segment extends Line {
+public class Segment {
 
-	Pixel p1;
+	Line line;
+	Pixel p1; //p1.x<p2.x
 	Pixel p2;
 
 	public Segment(Line line, Pixel p1, Pixel p2) {
-		super(line);
+		this.line = new Line(line);
 		if (p1.x() < p2.x()) { //in every segment p1.x < p2.x
 			this.p1 = p1;
 			this.p2 = p2;
@@ -22,21 +23,28 @@ public class Segment extends Line {
 	}
 
 	public Pixel cuttingPoint(Segment other) {
-		if (m == other.m) {
-			if (n == other.n) //Lines converge
-				if (p2.x() < other.p1.x() || p1.x() > other.p2.x())  
-					return null;
-				else return new Pixel(Integer.MAX_VALUE, Integer.MAX_VALUE);
-			else //parallel lines
+		Pixel cuttingLines = line.cuttingPoint(other.line);
+		if (cuttingLines == null)
+			return null;
+		if (cuttingLines.equals(new Pixel(Integer.MAX_VALUE, Integer.MAX_VALUE)))  //Lines converge
+			if (onSegment(other.p1) || onSegment(other.p2))
+				return new Pixel(Integer.MAX_VALUE, Integer.MAX_VALUE);
+			else
 				return null;
-		}
-		double x = (other.n-n)/(m-other.m);
-		if (x < other.p1.x() || x < p1.x() || x > other.p2.x() || x > p2.x())
-			return null; //cutting point isn't on two segments
-		
-		double y = m*x + n;
-		return new Pixel((int)x, (int)y);
-		
+		if (onSegment(cuttingLines))
+			return cuttingLines;
+		return null;
+	}
+	
+	public boolean onSegment(Pixel pixel) {
+		if (pixel.equals(p1) || pixel.equals(p2))
+			return false;
+		return (p1.x() <= pixel.x() && pixel.x() <= p2.x() && (p1.y()-pixel.y())*(p2.y()-pixel.y()) < 0); //p1.x<x'<p2.x && p1.y<y'<p2.y
+	}
+	
+
+	public String toString() {
+		return line.toString() + "[" + p1.toString() + "," + p2.toString() + "]";
 	}
 
 }

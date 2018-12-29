@@ -54,6 +54,7 @@ public class MainWindow extends JFrame
 	public Press press = Press.NOTHING;
 	public Play play;
 	public File file;
+
 	double azimuth = 0;
 
 	private Csv2Game convertor = new Csv2Game();
@@ -125,6 +126,7 @@ public class MainWindow extends JFrame
 			return;
 		play = new Play(file.getAbsolutePath());
 		game = convertor.convert(file);
+		myBoard.repaintMe();
 		chooseLocation();
 	}
 
@@ -135,8 +137,10 @@ public class MainWindow extends JFrame
 			@Override
 			public void run() {
 				play.start();
+				Shortest algo = new Shortest(game, myBoard);
 				boolean continueGame = true;
 				while (continueGame) {
+					System.out.println("");
 					Report report = Report.Parse(play.getStatistics());
 					//refresh the bottom menu!
 					if (report.getTimeLeft() <= 0)
@@ -153,14 +157,12 @@ public class MainWindow extends JFrame
 						e.printStackTrace();
 					}
 
-					Shortest algo = new Shortest(game, myBoard);
 					if (game.player != null && !game.fruits.isEmpty()) {
-						Path path = algo.findPath(myBoard.map.gps2pixel(game.player.getLocation(), myBoard.getWidth(), myBoard.getHeight()),
+						Pixel nextPixel = algo.findPath(myBoard.map.gps2pixel(game.player.getLocation(), myBoard.getWidth(), myBoard.getHeight()),
 								myBoard.map.gps2pixel(game.fruits.iterator().next().getLocation(), myBoard.getWidth(), myBoard.getHeight()));
-						if (path != null) {
-							Iterator<Pixel> it = path.iterator();
-							azimuth = myBoard.mc.azimuth(myBoard.map.pixel2gps(it.next(), myBoard.getWidth(), myBoard.getHeight()),
-									myBoard.map.pixel2gps(it.next(), myBoard.getWidth(), myBoard.getHeight()));				
+						if (nextPixel != null) {
+							azimuth = myBoard.mc.azimuth(game.player.getLocation(),
+									myBoard.map.pixel2gps(nextPixel, myBoard.getWidth(), myBoard.getHeight()));
 							play.rotate(azimuth);
 						}
 					}
