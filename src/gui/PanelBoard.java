@@ -81,25 +81,25 @@ public class PanelBoard extends JPanel implements MouseListener {
 		//draw fruits
 		for (Fruit fruit: window.game.fruits) {
 			Pixel pixel = map.gps2pixel(fruit.getLocation(), this.getWidth(), this.getHeight());
-			g.drawImage(fruitsImages[fruit.getRandImage()], pixel.x(), pixel.y(), this );
+			g.drawImage(fruitsImages[fruit.getRandImage()], pixel.x() - fruitsImages[fruit.getRandImage()].getWidth()/2, pixel.y() - fruitsImages[fruit.getRandImage()].getHeight()/2, this);
 		}
 
 		//draw packmans
 		for (Packman packman: window.game.packmans) {
 			Pixel pixel = map.gps2pixel(packman.getLocation(), this.getWidth(), this.getHeight());
-			g.drawImage(packmanImage, pixel.x(), pixel.y(), this);
+			g.drawImage(packmanImage, pixel.x() - packmanImage.getWidth()/2, pixel.y() - packmanImage.getHeight()/2, this);
 		}
 
 		//draw ghosts
 		for (Ghost ghost: window.game.ghosts) {
 			Pixel pixel = map.gps2pixel(ghost.getLocation(), this.getWidth(), this.getHeight());
-			g.drawImage(ghostImage, pixel.x(), pixel.y(), this);
+			g.drawImage(ghostImage, pixel.x() - ghostImage.getWidth()/2, pixel.y() - ghostImage.getHeight()/2, this);
 		}
 
 		//draw player
 		if (window.game.player != null) {
 			Pixel pixel = map.gps2pixel(window.game.player.getLocation(), this.getWidth(), this.getHeight());
-			g.drawImage(playerImage, pixel.x(), pixel.y(), this);
+			g.drawImage(playerImage, pixel.x() - playerImage.getWidth()/2, pixel.y() - playerImage.getHeight()/2, this);
 		}		
 
 	}

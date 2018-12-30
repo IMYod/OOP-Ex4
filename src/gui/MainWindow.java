@@ -141,6 +141,7 @@ public class MainWindow extends JFrame
 	}
 
 	public boolean importCsv() {
+		endGame();
 		JFileChooser fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV files", "csv");
 		fc.setFileFilter(filter);
@@ -181,7 +182,7 @@ public class MainWindow extends JFrame
 					play.rotate(azimuth);
 					bottom.refresh(Report.Parse(play.getStatistics()));
 					myBoard.repaintMe();
-					
+
 					try {
 						Thread.sleep(30);
 					} catch (InterruptedException e) {
@@ -195,11 +196,7 @@ public class MainWindow extends JFrame
 
 				if (!automatic)
 					press = Press.NOTHING;
-
-				// print the data & save to the course DB
-				System.out.println("**** Done Game (user stop) ****");	
-				String info = play.getStatistics();
-				System.out.println(info);
+				endGame();
 			}
 		});
 		startAutoGame.start();
@@ -234,5 +231,15 @@ public class MainWindow extends JFrame
 		game.clear();
 	}
 
-}
+	public void endGame() {
+		if (play==null)
+			return;
+		if (play.isRuning())
+			play.stop();
 
+		// print the data & save to the course DB
+		System.out.println("**** Done Game (user stop) ****");	
+		String info = play.getStatistics();
+		System.out.println(info);
+	}
+}

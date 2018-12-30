@@ -127,6 +127,8 @@ public class Shortest {
 	private Pixel closestFruitAndPackman(Pixel source) {
 		Pixel closestPixel = null; 
 		double minDistance = Double.MAX_VALUE;
+		
+		//find closest fruit
 		for (Fruit fruit: game.fruits) {
 			Pixel fruitPixel = board.map.gps2pixel(fruit.getLocation(),  board.getWidth(), board.getHeight());
 			if (freePath(source, fruitPixel)) {
@@ -137,6 +139,7 @@ public class Shortest {
 			}
 		}
 		
+		//find closest packman
 		for (Packman packman: game.packmans) {
 			Pixel fruitPixel = board.map.gps2pixel(packman.getLocation(),  board.getWidth(), board.getHeight());
 			if (freePath(source, fruitPixel)) {
