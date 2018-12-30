@@ -47,5 +47,25 @@ public class Pixel {
 		}
 		return false;
 	}
-
+	
+	public double azimuthPixel (Pixel target) {
+		int deltaY = target.y - y;
+		int deltaX = target.x - x;
+		double azimuth = Math.atan((double)deltaY/deltaX);
+		
+		//to degrees
+		azimuth = Math.toDegrees(azimuth);
+		azimuth = (azimuth+360)%360;
+		
+		if (deltaX>0) {
+			if (deltaY<0)
+				azimuth = 180 - azimuth;
+		}
+		else if (deltaY > 0)
+			azimuth = 360 - azimuth;
+		else
+			azimuth += 180;
+		System.out.println("azimuth:"+azimuth);
+		return azimuth;
+	}
 }

@@ -31,7 +31,7 @@ public class Segment {
 				return new Pixel(Integer.MAX_VALUE, Integer.MAX_VALUE);
 			else
 				return null;
-		if (onSegment(cuttingLines))
+		if (onSegment(cuttingLines) && other.onSegment(cuttingLines))
 			return cuttingLines;
 		return null;
 	}
@@ -39,7 +39,7 @@ public class Segment {
 	public boolean onSegment(Pixel pixel) {
 		if (pixel.equals(p1) || pixel.equals(p2))
 			return false;
-		return (p1.x() <= pixel.x() && pixel.x() <= p2.x() && (p1.y()-pixel.y())*(p2.y()-pixel.y()) < 0); //p1.x<x'<p2.x && p1.y<y'<p2.y
+		return (p1.x() <= pixel.x() && pixel.x() <= p2.x() && (p1.y()-pixel.y())*(p2.y()-pixel.y()) <= 0); //p1.x<x'<p2.x && p1.y<y'<p2.y
 	}
 	
 

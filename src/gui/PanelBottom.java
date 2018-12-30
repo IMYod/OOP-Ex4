@@ -5,6 +5,9 @@ import java.awt.GridLayout;
 import java.awt.Label;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import com.sun.net.ssl.internal.www.protocol.https.Handler;
 
 import gameData.Report;
 
@@ -36,4 +39,5 @@ public class PanelBottom extends JPanel {
 		killByGhosts.setText("kill by ghosts: " + report.getKillByGhosts());
 		outOfBox.setText("out of box: " + report.getOutOfBox());
 	}
+
 }

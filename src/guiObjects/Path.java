@@ -25,4 +25,13 @@ public class Path extends ArrayList<Integer> {
 		}
 		return distance;
 	}
+	
+	public String toString(Pixel[] corners) {
+		StringBuilder sb = new StringBuilder("[");
+		for (int i=0; i<size(); i++)
+			sb.append(corners[get(i)] + ",");
+		sb.deleteCharAt(sb.length()-1);
+		sb.append("]");
+		return sb.toString();
+	}
 }

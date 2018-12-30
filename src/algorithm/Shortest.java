@@ -24,8 +24,7 @@ public class Shortest {
 	public Pixel[] corners;
 
 	public Shortest(AllObjects game, PanelBoard board) {
-		this.game = game;
-		this.board = board;
+		refresh(game, board);
 		corners = new Pixel[game.boxes.size()*4+1];
 		matrixCorners = new boolean[game.boxes.size()*4+1][game.boxes.size()*4+1];
 		buildGraph();
@@ -53,12 +52,8 @@ public class Shortest {
 	}
 
 	//based on BFS algorithm, using priority queue
-	public Pixel findPath(Pixel source, Pixel target) {
-		if (source.equals(target))
-			return target;
-		initSource(source, target);
-		
-		System.out.println("from:" + source);
+	public Pixel findPath(Pixel source) {
+		initSource(source);
 		
 		PriorityQueue<Path> queue = new PriorityQueue<>(new PathComperator(corners)); //priority queue, poll the shortest path
 		queue.add(new Path(0)); //add the source to queue
@@ -68,10 +63,10 @@ public class Shortest {
 			Pixel closestDirectFruit = closestFruit(corners[shortPath.getTail()]); //if exist direct path to fruits - go to the closest
 			if (closestDirectFruit != null) { //found fruit from the end of the path
 				if (shortPath.size() >= 2) {
-					System.out.println("to path:" + shortPath);
+					System.out.println("from:" + source + " path:" + shortPath.toString(corners));
 					return corners[shortPath.get(1)]; //go to the next corner
 				}
-				System.out.println("to:" + closestDirectFruit);
+				System.out.println("from:" + source + " to:" + closestDirectFruit);
 				return closestDirectFruit; //go to the closest fruit 
 			}
 			else
@@ -82,7 +77,7 @@ public class Shortest {
 		return null; //not found any fruit or other corner
 	}
 
-		public void initSource(Pixel source, Pixel target) {
+		public void initSource(Pixel source) {
 			corners[0] = source;
 			for (int i=1; i<corners.length; i++) {
 				boolean free = freePath(source, corners[i]);
@@ -155,54 +150,10 @@ public class Shortest {
 			return closestPixel;
 		}
 		
-//		private void improvePath(Path path) {
-		//		for (int i=1; i<path.size()-3; i++)
-		//			if (freePath(path.get(i), path.get(i+2))) { //go direct from i to i+2
-		//				path.remove(i+1);
-		//				improvePath(path);
-		//				return;
-		//			}
-		//	}
-		
-//	private void improvePath(Path path) {
-//		for (int i=1; i<path.size()-3; i++)
-//			if (freePath(path.get(i), path.get(i+2))) { //go direct from i to i+2
-//				path.remove(i+1);
-//				improvePath(path);
-//				return;
-//			}
-//	}
-//
-//	private int firstStep(Pixel source, Pixel target) {
-//		corners[0] = source;
-//		for (int i=1; i<corners.length; i++) {
-//			boolean free = freePath(source, corners[i]);
-//			matrix[0][i] = free;
-//			matrix[i][0] = free;
-//		}
-//		return nextStep(0, target);
-//	}
-//
-//	private int nextStep(int source, Pixel target) {
-//		if (freePath(corners[source], target)) //go to the target
-//			return Integer.MAX_VALUE;
-//
-//		int closest = -1; 
-//		double minCalculateDistance = Double.MAX_VALUE;
-//		for (int i=1; i<matrix.length; i++) {
-//			if (i==source || matrix[source][i] == false) //don't calculate the distance between source -> source or no free path
-//				; //next iteration
-//			else{
-//				double calculateDistance = corners[source].distance(corners[i]) + corners[i].distance(target); //one step + distance to the target
-//				if (calculateDistance < minCalculateDistance) {
-//					closest = i;
-//					minCalculateDistance = calculateDistance;
-//				}
-//			}
-//		}
-//
-//		return closest;
-//	}
+		public void refresh(AllObjects game, PanelBoard board) {
+			this.game = game;
+			this.board = board;
+		}
 
 	
 	
