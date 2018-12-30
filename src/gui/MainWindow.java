@@ -210,6 +210,11 @@ public class MainWindow extends JFrame
 	}
 
 	private Point3D chooseAutoLocation() {
+		Shortest algo = new Shortest(game, myBoard);
+		Point3D startingPoint = algo.mostCenteral(100);
+		System.out.println(startingPoint);
+		if (startingPoint != null)
+			return startingPoint;
 		return new Point3D(32.1044700993651, 35.2079930001858, 0);
 	}
 

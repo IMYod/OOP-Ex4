@@ -8,6 +8,7 @@ import GeoObjects.Box;
 import GeoObjects.Fruit;
 import GeoObjects.GenericGeoObject;
 import GeoObjects.Ghost;
+import GeoObjects.Packman;
 import GeoObjects.Point3D;
 import gui.PanelBoard;
 import guiObjects.Line;
@@ -24,6 +25,9 @@ public class Shortest {
 	public boolean[][] matrixCorners;
 	public Pixel[] corners;
 
+	private Point3D centeralPoint; //for init location
+	int maxCloseObjects = 0; //how many objects nearby the most centeral object
+
 	public Shortest(AllObjects game, PanelBoard board) {
 		refresh(game, board);
 		corners = new Pixel[game.boxes.size()*4+1];
@@ -31,7 +35,7 @@ public class Shortest {
 		buildGraph();
 	}
 
-	public void buildGraph() {
+	private void buildGraph() {
 
 		//Init the corners array
 
@@ -55,10 +59,10 @@ public class Shortest {
 	//based on BFS algorithm, using priority queue
 	public Pixel findPath(Pixel source) {
 		initSource(source);
-		
-//		Pixel runAwayFromGhost = runAway(source);
-//		if (runAwayFromGhost!=null)
-//			return runAwayFromGhost;
+
+		//		Pixel runAwayFromGhost = runAway(source);
+		//		if (runAwayFromGhost!=null)
+		//			return runAwayFromGhost;
 
 		PriorityQueue<Path> queue = new PriorityQueue<>(new PathComperator(corners)); //priority queue, poll the shortest path
 		queue.add(new Path(0)); //add the source to queue
@@ -140,17 +144,19 @@ public class Shortest {
 		this.board = board;
 	}
 
+	//**********run away from ghosts**************
+
 	public Pixel runAway(Pixel source) {
 		if (game.ghosts.isEmpty()) //no ghosts in this game
 			return null;
-		
+
 		Pixel closestGhost = closestGhost(source);
 		double ghostRadiusEating = game.ghosts.iterator().next().getRadius();
-		
+
 		//the ghost is far away
 		if (source.distance(closestGhost) > ghostRadiusEating*400)
 			return null;
-		
+
 		int deltaY = (closestGhost.y() - source.y());
 		int deltaX = closestGhost.x() - source.x();
 
@@ -159,10 +165,9 @@ public class Shortest {
 			return new Pixel(source.x()+deltaY, source.y()-deltaX);
 		if (freePath(source, new Pixel(source.x()-deltaY, source.y()+deltaX)))
 			return new Pixel(source.x()-deltaY, source.y()+deltaX);
-		
+
 		return null;
 	}
-
 
 	private Pixel closestGhost(Pixel source) {
 		Pixel closestPixel = null; 
@@ -177,5 +182,42 @@ public class Shortest {
 		return closestPixel;
 	}
 
+	//******** find first location *********
+
+	public Point3D mostCenteral(double radius) {
+		maxCloseObjects = 0;
+		centeralPoint = null;
+		for (Fruit fruit: game.fruits)
+			calculateCloseObject(fruit, radius);
+
+		for (Packman packman: game.packmans)
+			calculateCloseObject(packman, radius);
+
+		return centeralPoint;
+	}
+
+	private void calculateCloseObject(GenericGeoObject object, double radius) {
+		int counter = countCloseObjects(object.getLocation(), radius);
+		if (counter > maxCloseObjects) {
+			maxCloseObjects = counter;
+			centeralPoint = object.getLocation(); 
+		}
+	}
+
+	private int countCloseObjects(Point3D location, double radius) {
+		Pixel source = board.map.gps2pixel(location, board.getWidth(), board.getHeight());
+		int counter = 0;
+		for (Fruit fruit: game.fruits) {
+			Pixel target = board.map.gps2pixel(fruit.getLocation(), board.getWidth(), board.getHeight());
+			if (source.distance(target) < radius && freePath(source, target))
+					counter++;
+		}
+		for (Packman packman: game.packmans) {
+			Pixel target = board.map.gps2pixel(packman.getLocation(), board.getWidth(), board.getHeight());
+			if (source.distance(target) < radius && freePath(source, target))
+					counter++;
+		}
+		return counter;
+	}
 
 }

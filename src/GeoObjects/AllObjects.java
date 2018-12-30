@@ -20,7 +20,7 @@ public class AllObjects {
 	public Set <Box> boxes = new HashSet<Box>();
 	public Player player;
 
-	
+
 	// clears all the objects from the game.
 	public void clear() {	
 		fruits.clear();
@@ -29,6 +29,6 @@ public class AllObjects {
 		boxes.clear();
 		player = null;
 	}
-	
+
 }
 
