@@ -74,6 +74,8 @@ public class MainWindow extends JFrame
 	private void initMenu() 
 	{
 		MenuBar menuBar = new MenuBar();
+
+		//new game menu
 		Menu newGame = new Menu("new game");
 
 		MenuItem importGame = new MenuItem("import");
@@ -95,6 +97,36 @@ public class MainWindow extends JFrame
 		newGame.add(importGame);
 		newGame.add(tryAgain);
 		menuBar.add(newGame);
+
+		//start menu
+		Menu start = new Menu("start!");
+
+		//playing by the mouse
+		MenuItem manual = new MenuItem("manual");
+		manual.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				chooseManualLocation();
+			}
+		});
+
+		//playing automatic
+		MenuItem auto = new MenuItem("auto");
+		auto.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Point3D startingPoint = chooseAutoLocation();
+				play.setInitLocation(startingPoint.x(), startingPoint.y());
+				startGame(true);
+			}
+		});
+
+		start.add(manual);
+		start.add(auto);
+		menuBar.add(start);
+
 		this.setMenuBar(menuBar);
 	}
 
@@ -127,13 +159,14 @@ public class MainWindow extends JFrame
 		play = new Play(file.getAbsolutePath());
 		play.setIDs(204533632, 206284267);
 		game = convertor.convert(file);
+		myBoard.setBounding(play.getBoundingBox());
 		myBoard.repaintMe();
-		chooseLocation();
 	}
 
-	public void startManuelGame() {
-		press = Press.GO;
-		Thread startGame = new Thread(new Runnable() {
+	public void startGame(boolean automatic) {
+		if (!automatic)
+			press = Press.GO;
+		Thread startAutoGame = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -142,13 +175,13 @@ public class MainWindow extends JFrame
 				while (play.isRuning()) {
 					algo.refresh(game, myBoard);
 					Report report = Report.Parse(play.getStatistics());
-					bottom.refresh(report);
 					//refresh the bottom menu!
 					ArrayList<String> board_data = play.getBoard();
 					game = dataConvertor.convert(board_data);
 					play.rotate(azimuth);
 					bottom.refresh(Report.Parse(play.getStatistics()));
 					myBoard.repaintMe();
+					
 					try {
 						Thread.sleep(30);
 					} catch (InterruptedException e) {
@@ -156,19 +189,12 @@ public class MainWindow extends JFrame
 						e.printStackTrace();
 					}
 
-					if (game.player != null && !game.fruits.isEmpty()) {
-						Pixel playerPixelLocation = myBoard.map.gps2pixel(game.player.getLocation(), myBoard.getWidth(), myBoard.getHeight());
-						Pixel nextPixel = algo.findPath(playerPixelLocation);
-						if (nextPixel != null) {
-							azimuth = myBoard.mc.azimuth(game.player.getLocation(),
-									myBoard.map.pixel2gps(nextPixel, myBoard.getWidth(), myBoard.getHeight()));
-//							azimuth = playerPixelLocation.azimuth(nextPixel);
-							play.rotate(azimuth);
-						}
-					}
+					if (automatic)
+						autoRotate(algo);
 				}
 
-				press = Press.NOTHING;
+				if (!automatic)
+					press = Press.NOTHING;
 
 				// print the data & save to the course DB
 				System.out.println("**** Done Game (user stop) ****");	
@@ -176,11 +202,26 @@ public class MainWindow extends JFrame
 				System.out.println(info);
 			}
 		});
-		startGame.start();
+		startAutoGame.start();
 	}
 
-	private void chooseLocation() {
+	private void chooseManualLocation() {
 		press = Press.FIRST_LOCATION;
+	}
+
+	private Point3D chooseAutoLocation() {
+		return new Point3D(32.1044700993651, 35.2079930001858, 0);
+	}
+
+	private void autoRotate(Shortest algo) {
+		if (game.player != null && !game.fruits.isEmpty()) {
+			Pixel playerPixelLocation = myBoard.map.gps2pixel(game.player.getLocation(), myBoard.getWidth(), myBoard.getHeight());
+			Pixel nextPixel = algo.findPath(playerPixelLocation); //calculate what is the next target (in pixels)
+			if (nextPixel != null) {
+				azimuth = myBoard.mc.azimuth(game.player.getLocation(), //refresh the azimuth
+						myBoard.map.pixel2gps(nextPixel, myBoard.getWidth(), myBoard.getHeight()));
+			}
+		}
 	}
 
 	public void clear() {

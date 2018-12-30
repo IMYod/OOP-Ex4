@@ -27,6 +27,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	public MainWindow window;
 	public Map map;
+	public Box bounding;
 
 	private BufferedImage[] fruitsImages;
 	private BufferedImage packmanImage;
@@ -61,18 +62,17 @@ public class PanelBoard extends JPanel implements MouseListener {
 	{
 		//		this.setSize(window.getWidth()-16, window.getHeight()-59); //check this numbers!!
 		this.setSize(window.getWidth()-16, window.getHeight()-90); //check this numbers!!
-
+		
 		//draw background
 		g.drawImage(map.myImage,0, 0, this.getWidth(), this.getHeight(), this);
 
 		if (window.game == null)
 			return;
-
+		
 		//draw boxes
 		g.setColor(Color.BLACK);
 		for (Box box: window.game.boxes) {
 			Pixel nw = box.getPixelNw(this);
-			//			System.out.println(nw);
 			int width = map.gps2pixel(box.getNe(), this.getWidth(), this.getHeight()).x() - nw.x();
 			int hight = map.gps2pixel(box.getSw(), this.getWidth(), this.getHeight()).y() - nw.y();
 			g.fillRect(nw.x(), nw.y(), width, hight);
@@ -100,7 +100,8 @@ public class PanelBoard extends JPanel implements MouseListener {
 		if (window.game.player != null) {
 			Pixel pixel = map.gps2pixel(window.game.player.getLocation(), this.getWidth(), this.getHeight());
 			g.drawImage(playerImage, pixel.x(), pixel.y(), this);
-		}
+		}		
+
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 		case FIRST_LOCATION:
 			Point3D pointToStart = map.pixel2gps(new Pixel(e.getX(),  e.getY()), this.getWidth(), this.getHeight());
 			window.play.setInitLocation(pointToStart.x(), pointToStart.y());
-			window.startManuelGame();
+			window.startGame(false);
 			repaintMe();
 			break;
 
@@ -153,6 +154,16 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	public void repaintMe() {
 		paintImmediately(0, 0, this.getWidth(), this.getHeight());
+	}
+	
+	void setBounding(String map_data) {
+		String[] csvRow = map_data.split(",");
+		Point3D point1 = new Point3D(Double.parseDouble(csvRow[2]),
+				Double.parseDouble(csvRow[3]),Double.parseDouble(csvRow[4]));
+		Point3D point2 = new Point3D(Double.parseDouble(csvRow[5]),
+				Double.parseDouble(csvRow[6]),0);
+		
+		bounding = new Box(point1, (int)Double.parseDouble(csvRow[1]), point2, 0.0, 0.0);
 	}
 
 }

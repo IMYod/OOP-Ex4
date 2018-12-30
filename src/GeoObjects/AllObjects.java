@@ -3,6 +3,7 @@ package GeoObjects;
 import java.util.HashSet;
 import java.util.Set;
 
+import convertor.Csv2Game;
 import guiObjects.Pixel;
 
 
@@ -26,6 +27,7 @@ public class AllObjects {
 		packmans.clear();
 		ghosts.clear();
 		boxes.clear();
+		player = null;
 	}
 	
 }

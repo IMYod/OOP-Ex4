@@ -7,6 +7,7 @@ import GeoObjects.AllObjects;
 import GeoObjects.Box;
 import GeoObjects.Fruit;
 import GeoObjects.GenericGeoObject;
+import GeoObjects.Ghost;
 import GeoObjects.Point3D;
 import gui.PanelBoard;
 import guiObjects.Line;
@@ -31,9 +32,9 @@ public class Shortest {
 	}
 
 	public void buildGraph() {
-	
+
 		//Init the corners array
-	
+
 		int k=1;
 		for (Box box: game.boxes) {
 			Pixel[] boxCorners = box.getPixelsCorners(board);
@@ -42,10 +43,10 @@ public class Shortest {
 				k++;
 			}
 		}
-	
+
 		//Init graph of the corners as matrix.
 		//matrix[i][j] true iff exist free path between (corners[i],corners[j])
-	
+
 		for (int i=1; i<matrixCorners.length; i++)
 			for (int j=1; j<matrixCorners.length; j++)
 				matrixCorners[i][j] = freeCornersPath(i, j);
@@ -55,6 +56,10 @@ public class Shortest {
 	public Pixel findPath(Pixel source) {
 		initSource(source);
 		
+//		Pixel runAwayFromGhost = runAway(source);
+//		if (runAwayFromGhost!=null)
+//			return runAwayFromGhost;
+
 		PriorityQueue<Path> queue = new PriorityQueue<>(new PathComperator(corners)); //priority queue, poll the shortest path
 		queue.add(new Path(0)); //add the source to queue
 
@@ -77,50 +82,30 @@ public class Shortest {
 		return null; //not found any fruit or other corner
 	}
 
-		public void initSource(Pixel source) {
-			corners[0] = source;
-			for (int i=1; i<corners.length; i++) {
-				boolean free = freePath(source, corners[i]);
-				matrixCorners[0][i] = free;
-				matrixCorners[i][0] = free;
-			}
+	public void initSource(Pixel source) {
+		corners[0] = source;
+		for (int i=1; i<corners.length; i++) {
+			boolean free = freePath(source, corners[i]);
+			matrixCorners[0][i] = free;
+			matrixCorners[i][0] = free;
 		}
-	
-	//	private int nextStep(int source, Pixel target) {
-	//		if (freePath(corners[source], target)) //go to the target
-	//			return Integer.MAX_VALUE;
-	//
-	//		int closest = -1; 
-	//		double minCalculateDistance = Double.MAX_VALUE;
-	//		for (int i=1; i<matrix.length; i++) {
-	//			if (i==source || matrix[source][i] == false) //don't calculate the distance between source -> source or no free path
-	//				; //next iteration
-	//			else{
-	//				double calculateDistance = corners[source].distance(corners[i]) + corners[i].distance(target); //one step + distance to the target
-	//				if (calculateDistance < minCalculateDistance) {
-	//					closest = i;
-	//					minCalculateDistance = calculateDistance;
-	//				}
-	//			}
-	//		}
-	//
-	//		return closest;
-	//	}
-	
-		private boolean freeCornersPath(int c1, int c2) {
-			//check if the corners belong to the same box
-			if (boxNumber(c1) == boxNumber(c2)) {
-				return Math.abs((c1-c2))%2 == 1; //Nearby corners - return true, Opposite corners - return false
-			}
-			else return freePath(corners[c1], corners[c2]);					
+	}
+
+
+	private boolean freeCornersPath(int c1, int c2) {
+		//check if the corners belong to the same box
+		if (boxNumber(c1) == boxNumber(c2)) {
+			return Math.abs((c1-c2))%2 == 1; //Nearby corners - return true, Opposite corners - return false
 		}
-		
-		//return the number of the box in the matrix, by thw corner number
-		private int boxNumber(int corner) {
-			return (corner-1)/4;
-		}
-		
-		private boolean freePath(Pixel source, Pixel target) {
+		else return freePath(corners[c1], corners[c2]);					
+	}
+
+	//return the number of the box in the matrix, by thw corner number
+	private int boxNumber(int corner) {
+		return (corner-1)/4;
+	}
+
+	private boolean freePath(Pixel source, Pixel target) {
 		if (source.equals(target))
 			return true;
 		Segment directSegmant = new Segment(new Line(source,target), source, target);
@@ -135,27 +120,62 @@ public class Shortest {
 		return true;
 	}
 
-		private Pixel closestFruit(Pixel source) {
-			Pixel closestPixel = null; 
-			double minDistance = Double.MAX_VALUE;
-			for (Fruit fruit: game.fruits) {
-				Pixel fruitPixel = board.map.gps2pixel(fruit.getLocation(),  board.getWidth(), board.getHeight());
-				if (freePath(source, fruitPixel)) {
-					if (source.distance(fruitPixel) < minDistance) {
-						minDistance = source.distance(fruitPixel);
-						closestPixel = fruitPixel;
-					}
+	private Pixel closestFruit(Pixel source) {
+		Pixel closestPixel = null; 
+		double minDistance = Double.MAX_VALUE;
+		for (Fruit fruit: game.fruits) {
+			Pixel fruitPixel = board.map.gps2pixel(fruit.getLocation(),  board.getWidth(), board.getHeight());
+			if (freePath(source, fruitPixel)) {
+				if (source.distance(fruitPixel) < minDistance) {
+					minDistance = source.distance(fruitPixel);
+					closestPixel = fruitPixel;
 				}
 			}
-			return closestPixel;
 		}
-		
-		public void refresh(AllObjects game, PanelBoard board) {
-			this.game = game;
-			this.board = board;
-		}
+		return closestPixel;
+	}
 
-	
-	
+	public void refresh(AllObjects game, PanelBoard board) {
+		this.game = game;
+		this.board = board;
+	}
+
+	public Pixel runAway(Pixel source) {
+		if (game.ghosts.isEmpty()) //no ghosts in this game
+			return null;
+		
+		Pixel closestGhost = closestGhost(source);
+		double ghostRadiusEating = game.ghosts.iterator().next().getRadius();
+		
+		//the ghost is far away
+		if (source.distance(closestGhost) > ghostRadiusEating*400)
+			return null;
+		
+		int deltaY = (closestGhost.y() - source.y());
+		int deltaX = closestGhost.x() - source.x();
+
+		//Go in the free vertical direction from the vector to the ghost
+		if (freePath(source, new Pixel(source.x()+deltaY, source.y()-deltaX)))
+			return new Pixel(source.x()+deltaY, source.y()-deltaX);
+		if (freePath(source, new Pixel(source.x()-deltaY, source.y()+deltaX)))
+			return new Pixel(source.x()-deltaY, source.y()+deltaX);
+		
+		return null;
+	}
+
+
+	private Pixel closestGhost(Pixel source) {
+		Pixel closestPixel = null; 
+		double minDistance = Double.MAX_VALUE;
+		for (Ghost ghost: game.ghosts) {
+			Pixel ghostPixel = board.map.gps2pixel(ghost.getLocation(),  board.getWidth(), board.getHeight());
+			if (source.distance(ghostPixel) < minDistance) {
+				minDistance = source.distance(ghostPixel);
+				closestPixel = ghostPixel;
+			}
+		}
+		return closestPixel;
+	}
+
 
 }
