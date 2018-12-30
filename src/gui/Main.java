@@ -1,6 +1,8 @@
 package gui;
 import javax.swing.JFrame;
 
+import audio.EatingSound;
+import audio.SimplePlayer;
 import guiObjects.Map;
 
 /**
@@ -23,5 +25,7 @@ public class Main
 		window.setSize(map.getOriginWidht()+16,map.getOriginHeight()+59);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+//		Thread backgroundMusic = new Thread(new EatingSound());
+//		backgroundMusic.start();
 	}
 }

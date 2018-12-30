@@ -30,6 +30,8 @@ import GeoObjects.Packman;
 import GeoObjects.Point3D;
 import Robot.Play;
 import algorithm.Shortest;
+import audio.EatingSound;
+import audio.SimplePlayer;
 import convertor.Csv2Game;
 import convertor.Data2Game;
 import gameData.Report;
@@ -57,6 +59,7 @@ public class MainWindow extends JFrame
 
 	double azimuth = 0;
 	Point3D lastLocation = null;
+	int lastNumObjects = 0;
 
 	private Csv2Game convertor = new Csv2Game();
 	private Data2Game dataConvertor = new Data2Game();
@@ -91,6 +94,8 @@ public class MainWindow extends JFrame
 		tryAgain.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (play != null && play.isRuning())
+					endGame();
 				newGame();
 			}
 		});
@@ -142,7 +147,8 @@ public class MainWindow extends JFrame
 	}
 
 	public boolean importCsv() {
-		endGame();
+		if (play != null && play.isRuning())
+			endGame();
 		JFileChooser fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV files", "csv");
 		fc.setFileFilter(filter);
@@ -163,6 +169,7 @@ public class MainWindow extends JFrame
 		game = convertor.convert(file);
 		myBoard.setBounding(play.getBoundingBox());
 		myBoard.repaintMe();
+		lastNumObjects = game.getNumOfFriutsAndPackmans();
 	}
 
 	public void startGame(boolean automatic) {
@@ -172,6 +179,10 @@ public class MainWindow extends JFrame
 
 			@Override
 			public void run() {
+				//play music
+				Thread backgroundMusic = new Thread(new SimplePlayer());
+				backgroundMusic.start();
+				
 				play.start();
 				Shortest algo = new Shortest(game, myBoard);
 				while (play.isRuning()) {
@@ -184,19 +195,27 @@ public class MainWindow extends JFrame
 					bottom.refresh(Report.Parse(play.getStatistics()));
 					myBoard.repaintMe();
 
+					if (lastNumObjects > game.getNumOfFriutsAndPackmans()) {
+						Thread eatingSoung = new Thread(new EatingSound());
+						eatingSoung.start();
+					}
+					lastNumObjects = game.getNumOfFriutsAndPackmans();
+					
+					//find new azimuth
+					if (automatic)
+						autoRotate(algo);
+					
 					try {
 						Thread.sleep(30);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
-
-					//find new azimuth
-					if (automatic)
-						autoRotate(algo);
+					}					
 				}
 
 				//end of the game
+				if (backgroundMusic.isAlive())
+					backgroundMusic.stop();
 				if (!automatic)
 					press = Press.NOTHING;
 				endGame();
@@ -211,17 +230,14 @@ public class MainWindow extends JFrame
 
 	private Point3D chooseAutoLocation() {
 		Shortest algo = new Shortest(game, myBoard);
-		Point3D startingPoint = algo.mostCenteral(100);
+		Point3D startingPoint = algo.mostCenteral(50);
 
 		//if the algorithms don't find point:
 		if (startingPoint == null)
 			startingPoint = new Point3D(32.1044700993651, 35.2079930001858, 0); //point in the center of the screen
 		
 		lastLocation = startingPoint;
-		return startingPoint;
-		
-
-		
+		return startingPoint;	
 	}
 
 	private void autoRotate(Shortest algo) {
@@ -235,7 +251,6 @@ public class MainWindow extends JFrame
 		}
 		if (game.player != null && lastLocation.equals(game.player.getLocation())) {
 			azimuth += 90*(int)(Math.random()*3+1); //if the player stack go to another location
-			System.out.println(azimuth);
 		}
 		lastLocation = game.player.getLocation();
 	}

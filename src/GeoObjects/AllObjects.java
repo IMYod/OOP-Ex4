@@ -30,5 +30,8 @@ public class AllObjects {
 		player = null;
 	}
 
+	public int getNumOfFriutsAndPackmans() {
+		return fruits.size() + packmans.size();
+	}
 }
 
