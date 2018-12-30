@@ -69,7 +69,7 @@ public class Shortest {
 
 		while (!queue.isEmpty()) {
 			Path shortPath = queue.poll(); //poll the shortest path
-			Pixel closestDirectFruit = closestFruit(corners[shortPath.getTail()]); //if exist direct path to fruits - go to the closest
+			Pixel closestDirectFruit = closestFruitAndPackman(corners[shortPath.getTail()]); //if exist direct path to fruits - go to the closest
 			if (closestDirectFruit != null) { //found fruit from the end of the path
 				if (shortPath.size() >= 2) {
 					System.out.println("from:" + source + " path:" + shortPath.toString(corners));
@@ -124,7 +124,7 @@ public class Shortest {
 		return true;
 	}
 
-	private Pixel closestFruit(Pixel source) {
+	private Pixel closestFruitAndPackman(Pixel source) {
 		Pixel closestPixel = null; 
 		double minDistance = Double.MAX_VALUE;
 		for (Fruit fruit: game.fruits) {
@@ -136,6 +136,17 @@ public class Shortest {
 				}
 			}
 		}
+		
+		for (Packman packman: game.packmans) {
+			Pixel fruitPixel = board.map.gps2pixel(packman.getLocation(),  board.getWidth(), board.getHeight());
+			if (freePath(source, fruitPixel)) {
+				if (source.distance(fruitPixel) < minDistance) {
+					minDistance = source.distance(fruitPixel);
+					closestPixel = fruitPixel;
+				}
+			}
+		}
+		
 		return closestPixel;
 	}
 
