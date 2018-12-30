@@ -116,6 +116,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 		switch (window.press) {
 		case FIRST_LOCATION:
 			Point3D pointToStart = map.pixel2gps(new Pixel(e.getX(),  e.getY()), this.getWidth(), this.getHeight());
+			window.lastLocation = pointToStart;
 			window.play.setInitLocation(pointToStart.x(), pointToStart.y());
 			window.startGame(false);
 			repaintMe();

@@ -56,6 +56,7 @@ public class MainWindow extends JFrame
 	public File file;
 
 	double azimuth = 0;
+	Point3D lastLocation = null;
 
 	private Csv2Game convertor = new Csv2Game();
 	private Data2Game dataConvertor = new Data2Game();
@@ -190,10 +191,12 @@ public class MainWindow extends JFrame
 						e.printStackTrace();
 					}
 
+					//find new azimuth
 					if (automatic)
 						autoRotate(algo);
 				}
 
+				//end of the game
 				if (!automatic)
 					press = Press.NOTHING;
 				endGame();
@@ -209,10 +212,16 @@ public class MainWindow extends JFrame
 	private Point3D chooseAutoLocation() {
 		Shortest algo = new Shortest(game, myBoard);
 		Point3D startingPoint = algo.mostCenteral(100);
-		System.out.println(startingPoint);
-		if (startingPoint != null)
-			return startingPoint;
-		return new Point3D(32.1044700993651, 35.2079930001858, 0);
+
+		//if the algorithms don't find point:
+		if (startingPoint == null)
+			startingPoint = new Point3D(32.1044700993651, 35.2079930001858, 0); //point in the center of the screen
+		
+		lastLocation = startingPoint;
+		return startingPoint;
+		
+
+		
 	}
 
 	private void autoRotate(Shortest algo) {
@@ -224,6 +233,11 @@ public class MainWindow extends JFrame
 						myBoard.map.pixel2gps(nextPixel, myBoard.getWidth(), myBoard.getHeight()));
 			}
 		}
+		if (game.player != null && lastLocation.equals(game.player.getLocation())) {
+			azimuth += 90*(int)(Math.random()*3+1); //if the player stack go to another location
+			System.out.println(azimuth);
+		}
+		lastLocation = game.player.getLocation();
 	}
 
 	public void clear() {
@@ -238,7 +252,7 @@ public class MainWindow extends JFrame
 			play.stop();
 
 		// print the data & save to the course DB
-		System.out.println("**** Done Game (user stop) ****");	
+		System.out.println("**** Done Game ****");	
 		String info = play.getStatistics();
 		System.out.println(info);
 	}
