@@ -4,18 +4,19 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Label;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.sun.net.ssl.internal.www.protocol.https.Handler;
+//import com.sun.net.ssl.internal.www.protocol.https.Handler;
 
 import gameData.Report;
 
 public class PanelBottom extends JPanel {
 
 	MainWindow window;
-	JLabel score = new JLabel();
+	JLabel score = new JLabel(new ImageIcon("ImagesforGui\\Icons\\score.png", "score"));
 	JLabel timeLeft = new JLabel();
 	JLabel killByGhosts = new JLabel();
 	JLabel outOfBox = new JLabel();
@@ -23,7 +24,7 @@ public class PanelBottom extends JPanel {
 	public PanelBottom(MainWindow window) {
 		super();
 		this.window = window;
-		this.setLayout(new GridLayout(1, 4));
+		this.setLayout(new GridLayout(1, 7));
 		initPanel();
 	}
 
@@ -35,10 +36,10 @@ public class PanelBottom extends JPanel {
 	}
 	
 	public void refresh(Report report) {
-		score.setText("score: " + report.getScore());
-		timeLeft.setText("time left: " + report.getTimeLeft());
-		killByGhosts.setText("kill by ghosts: " + report.getKillByGhosts());
-		outOfBox.setText("out of box: " + report.getOutOfBox());
+		score.setText("" + report.getScore());
+		timeLeft.setText(" " + report.getTimeLeft());
+		killByGhosts.setText(" " + report.getKillByGhosts());
+		outOfBox.setText(" " + report.getOutOfBox());
 	}
 
 }

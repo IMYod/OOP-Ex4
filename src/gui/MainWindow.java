@@ -19,9 +19,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Coords.MyCoords;
@@ -57,7 +62,7 @@ public class MainWindow extends JFrame
 	public Press press = Press.NOTHING;
 	public Play play;
 	public File file;
-
+	
 	double azimuth = 0;
 	Point3D lastLocation = null;
 	int lastNumObjects = 0;
@@ -65,25 +70,28 @@ public class MainWindow extends JFrame
 	private Csv2Game convertor = new Csv2Game();
 	private Data2Game dataConvertor = new Data2Game();
 
-	////////////////////***Constructors****///////////////////////////////////
+//////////////////////////////***Constructors****///////////////////////////////////
 
 	public MainWindow(Map map) 
 	{		
+		this.setTitle("Mario Game");
+	    ImageIcon img = new ImageIcon("ImagesforGui\\Icons\\super-mario.png");
+	    this.setIconImage(img.getImage());
 		initMenu();
 		myBoard = new PanelBoard(this, map);
 		initPanels();
 	}
 
-	////////////////////***Menu Bar****///////////////////////////////////
+////////////////////////////////***Menu Bar****///////////////////////////////////
 
 	private void initMenu() 
 	{
-		MenuBar menuBar = new MenuBar();
+		JMenuBar menuBar = new JMenuBar();
 
 		//new game menu
-		Menu newGame = new Menu("new game");
+		JMenu newGame = new JMenu("New Game");
 
-		MenuItem importGame = new MenuItem("import");
+		JMenuItem  importGame = new JMenuItem ("Open CSV File",new ImageIcon("ImagesforGui\\Icons\\csv.png"));
 		importGame.addActionListener(new ActionListener() {		
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -91,7 +99,7 @@ public class MainWindow extends JFrame
 			}
 		});
 
-		MenuItem tryAgain = new MenuItem("try again");
+		JMenuItem  tryAgain = new JMenuItem ("Try Again",new ImageIcon("ImagesforGui\\Icons\\tryAgain.png"));
 		tryAgain.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -106,10 +114,10 @@ public class MainWindow extends JFrame
 		menuBar.add(newGame);
 
 		//start menu
-		Menu start = new Menu("start!");
+		JMenu start = new JMenu("Start!");
 
 		//playing by the mouse
-		MenuItem manual = new MenuItem("manual");
+		JMenuItem  manual = new JMenuItem ("Manual",new ImageIcon("ImagesforGui\\Icons\\Manual.png"));
 		manual.addActionListener(new ActionListener() {
 
 			@Override
@@ -119,7 +127,7 @@ public class MainWindow extends JFrame
 		});
 
 		//playing automatic
-		MenuItem auto = new MenuItem("auto");
+		JMenuItem  auto = new JMenuItem("Auto",new ImageIcon("ImagesforGui\\Icons\\Auto.png"));
 		auto.addActionListener(new ActionListener() {
 
 			@Override
@@ -134,8 +142,15 @@ public class MainWindow extends JFrame
 		start.add(auto);
 		menuBar.add(start);
 
-		this.setMenuBar(menuBar);
+		this.setJMenuBar(menuBar);
+		
+		try { //////Window windows
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+//////////////////////////////////////////***Methods****///////////////////////////////////
 
 	private void initPanels() {
 		this.add("Center", myBoard);
@@ -143,7 +158,7 @@ public class MainWindow extends JFrame
 
 		bottom = new PanelBottom(this);
 		add("South", bottom);
-		bottom.setSize(this.getWidth(), 50);
+		bottom.setSize(this.getWidth(), 100);
 		bottom.setVisible(true);
 	}
 
@@ -233,7 +248,7 @@ public class MainWindow extends JFrame
 				Runnable updater = new LabelUpdater(bottom.killByGhosts, "kill by ghosts:"+report.getKillByGhosts());
 				EventQueue.invokeLater(updater);
 
-				updater = new LabelUpdater(bottom.score, "score:"+report.getScore());
+				updater = new LabelUpdater(bottom.score, " "+report.getScore());
 				EventQueue.invokeLater(updater);
 
 				updater = new LabelUpdater(bottom.outOfBox, "out of box:"+report.getOutOfBox());
@@ -293,4 +308,5 @@ public class MainWindow extends JFrame
 		String info = play.getStatistics();
 		System.out.println(info);
 	}
+	
 }

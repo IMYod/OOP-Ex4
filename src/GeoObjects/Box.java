@@ -1,6 +1,6 @@
 package GeoObjects;
 
-import com.sun.tools.javac.resources.compiler;
+//import com.sun.tools.javac.resources.compiler;
 
 import Coords.MyCoords;
 import gui.MainWindow;
