@@ -17,6 +17,10 @@ public class Segment {
 			this.p2 = p1;
 		}
 	}
+	
+	public Segment(Pixel p1, Pixel p2) {
+		this(new Line(p1,p2), p1, p2);
+	}
 
 	public double length() {
 		return p1.distance(p2);
