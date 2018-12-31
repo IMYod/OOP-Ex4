@@ -60,6 +60,7 @@ public class Shortest {
 	public Pixel findPath(Pixel source) {
 		initSource(source);
 
+//		//run away from ghosts
 //		Pixel runAwayFromGhost = runAway(source);
 //		if (runAwayFromGhost!=null)
 //			return runAwayFromGhost;
@@ -126,6 +127,17 @@ public class Shortest {
 		Pixel closestPixel = null; 
 		double minDistance = Double.MAX_VALUE;
 
+		//find closest packman
+		for (Packman packman: game.packmans) {
+			Pixel packmanPixel = board.map.gps2pixel(packman.getLocation(),  board.getWidth(), board.getHeight());
+			if (freePath(source, packmanPixel)) {
+				if (source.distance(packmanPixel)/2 < minDistance) { //get priority of 2 to the packmans
+					minDistance = source.distance(packmanPixel);
+					closestPixel = packmanPixel;
+				}
+			}
+		}
+		
 		//find closest fruit
 		for (Fruit fruit: game.fruits) {
 			Pixel fruitPixel = board.map.gps2pixel(fruit.getLocation(),  board.getWidth(), board.getHeight());
@@ -136,18 +148,6 @@ public class Shortest {
 				}
 			}
 		}
-
-		//find closest packman
-		for (Packman packman: game.packmans) {
-			Pixel fruitPixel = board.map.gps2pixel(packman.getLocation(),  board.getWidth(), board.getHeight());
-			if (freePath(source, fruitPixel)) {
-				if (source.distance(fruitPixel)/2 < minDistance) { //get priority of 2 to the packmans
-					minDistance = source.distance(fruitPixel);
-					closestPixel = fruitPixel;
-				}
-			}
-		}
-
 		return closestPixel;
 	}
 
@@ -166,13 +166,13 @@ public class Shortest {
 		double ghostRadiusEating = game.ghosts.iterator().next().getRadius();
 
 		//the ghost is far away
-		if (source.distance(closestGhost) > (1+ghostRadiusEating)*60)
+		if (source.distance(closestGhost) > (1+ghostRadiusEating)*90)
 			return null;
 
 		int deltaY = (closestGhost.y() - source.y());
 		int deltaX = closestGhost.x() - source.x();
 
-		if (source.distance(closestGhost) < (1+ghostRadiusEating)*40)
+		if (source.distance(closestGhost) < (1+ghostRadiusEating)*15)
 			if (freePath(source, new Pixel(source.x()-deltaX, source.y()-deltaY)))
 				return new Pixel(source.x()-deltaX, source.y()-deltaY);
 
@@ -223,16 +223,18 @@ public class Shortest {
 	private int countCloseObjects(Point3D location, double radius) {
 		Pixel source = board.map.gps2pixel(location, board.getWidth(), board.getHeight());
 		int counter = 0;
-		for (Fruit fruit: game.fruits) {
-			Pixel target = board.map.gps2pixel(fruit.getLocation(), board.getWidth(), board.getHeight());
-			if (source.distance(target) < radius && freePath(source, target))
-				counter++;
-		}
 		for (Packman packman: game.packmans) {
 			Pixel target = board.map.gps2pixel(packman.getLocation(), board.getWidth(), board.getHeight());
 			if (source.distance(target) < radius && freePath(source, target))
 				counter++;
 		}
+		
+		for (Fruit fruit: game.fruits) {
+			Pixel target = board.map.gps2pixel(fruit.getLocation(), board.getWidth(), board.getHeight());
+			if (source.distance(target) < radius && freePath(source, target))
+				counter++;
+		}
+
 		return counter;
 	}
 

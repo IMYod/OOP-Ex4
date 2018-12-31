@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Label;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -14,10 +15,10 @@ import gameData.Report;
 public class PanelBottom extends JPanel {
 
 	MainWindow window;
-	Label score = new Label();
-	Label timeLeft = new Label();
-	Label killByGhosts = new Label();
-	Label outOfBox = new Label();
+	JLabel score = new JLabel();
+	JLabel timeLeft = new JLabel();
+	JLabel killByGhosts = new JLabel();
+	JLabel outOfBox = new JLabel();
 	
 	public PanelBottom(MainWindow window) {
 		super();

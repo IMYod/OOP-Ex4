@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Menu;
@@ -187,12 +188,14 @@ public class MainWindow extends JFrame
 				Shortest algo = new Shortest(game, myBoard);
 				while (play.isRuning()) {
 					algo.refresh(game, myBoard);
-					Report report = Report.Parse(play.getStatistics());
+
 					//refresh the bottom menu!
+					Report report = Report.Parse(play.getStatistics());
+					updateAll(report);
+										
 					ArrayList<String> board_data = play.getBoard();
 					game = dataConvertor.convert(board_data);
 					play.rotate(azimuth);
-					bottom.refresh(Report.Parse(play.getStatistics()));
 					myBoard.repaintMe();
 
 					if (lastNumObjects > game.getNumOfFriutsAndPackmans()) {
@@ -214,11 +217,28 @@ public class MainWindow extends JFrame
 				}
 
 				//end of the game
+				Report report = Report.Parse(play.getStatistics());
+				updateAll(report);
+				
 				if (backgroundMusic.isAlive())
 					backgroundMusic.stop();
 				if (!automatic)
 					press = Press.NOTHING;
 				endGame();
+			}
+
+			private void updateAll(Report report) {
+				Runnable updater = new LabelUpdater(bottom.killByGhosts, "kill by ghosts:"+report.getKillByGhosts());
+				EventQueue.invokeLater(updater);
+				
+				updater = new LabelUpdater(bottom.score, "score:"+report.getScore());
+				EventQueue.invokeLater(updater);
+				
+				updater = new LabelUpdater(bottom.outOfBox, "out of box:"+report.getOutOfBox());
+				EventQueue.invokeLater(updater);
+				
+				updater = new LabelUpdater(bottom.timeLeft, "time left:"+report.getTimeLeft());
+				EventQueue.invokeLater(updater);
 			}
 		});
 		startAutoGame.start();
