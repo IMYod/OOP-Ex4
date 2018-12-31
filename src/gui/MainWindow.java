@@ -183,8 +183,9 @@ public class MainWindow extends JFrame
 				//play music
 				Thread backgroundMusic = new Thread(new SimplePlayer());
 				backgroundMusic.start();
-				
+
 				play.start();
+
 				Shortest algo = new Shortest(game, myBoard);
 				while (play.isRuning()) {
 					algo.refresh(game, myBoard);
@@ -192,7 +193,7 @@ public class MainWindow extends JFrame
 					//refresh the bottom menu!
 					Report report = Report.Parse(play.getStatistics());
 					updateAll(report);
-										
+
 					ArrayList<String> board_data = play.getBoard();
 					game = dataConvertor.convert(board_data);
 					play.rotate(azimuth);
@@ -203,11 +204,11 @@ public class MainWindow extends JFrame
 						eatingSoung.start();
 					}
 					lastNumObjects = game.getNumOfFriutsAndPackmans();
-					
+
 					//find new azimuth
 					if (automatic)
 						autoRotate(algo);
-					
+
 					try {
 						Thread.sleep(30);
 					} catch (InterruptedException e) {
@@ -219,7 +220,7 @@ public class MainWindow extends JFrame
 				//end of the game
 				Report report = Report.Parse(play.getStatistics());
 				updateAll(report);
-				
+
 				if (backgroundMusic.isAlive())
 					backgroundMusic.stop();
 				if (!automatic)
@@ -227,16 +228,17 @@ public class MainWindow extends JFrame
 				endGame();
 			}
 
+			//This function updates data in the bottom panel
 			private void updateAll(Report report) {
 				Runnable updater = new LabelUpdater(bottom.killByGhosts, "kill by ghosts:"+report.getKillByGhosts());
 				EventQueue.invokeLater(updater);
-				
+
 				updater = new LabelUpdater(bottom.score, "score:"+report.getScore());
 				EventQueue.invokeLater(updater);
-				
+
 				updater = new LabelUpdater(bottom.outOfBox, "out of box:"+report.getOutOfBox());
 				EventQueue.invokeLater(updater);
-				
+
 				updater = new LabelUpdater(bottom.timeLeft, "time left:"+report.getTimeLeft());
 				EventQueue.invokeLater(updater);
 			}
@@ -255,7 +257,7 @@ public class MainWindow extends JFrame
 		//if the algorithms don't find point:
 		if (startingPoint == null)
 			startingPoint = new Point3D(32.1044700993651, 35.2079930001858, 0); //point in the center of the screen
-		
+
 		lastLocation = startingPoint;
 		return startingPoint;	
 	}

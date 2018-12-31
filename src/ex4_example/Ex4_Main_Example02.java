@@ -65,24 +65,6 @@ public class Ex4_Main_Example02 {
 			System.out.println();
 
 		}
-		play1.setInitLocation(32.1040,35.2061);
-		while(play1.isRuning() && i<10) {
-			i++;
-			// 7.1) this is the main command to the player (on the server side)
-			play1.rotate(36*i); 
-			System.out.println("***** "+i+"******");
-
-			// 7.2) get the current score of the game
-			String info = play1.getStatistics();
-			System.out.println(info);
-			// 7.3) get the game-board current state
-			board_data = play1.getBoard();
-			for(int a=0;a<board_data.size();a++) {
-				System.out.println(board_data.get(a));
-			}
-			System.out.println();
-
-		}
 		
 		// 8) stop the server - not needed in the real implementation.
 		//play1.stop();

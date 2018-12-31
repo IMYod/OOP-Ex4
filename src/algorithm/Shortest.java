@@ -60,10 +60,10 @@ public class Shortest {
 	public Pixel findPath(Pixel source) {
 		initSource(source);
 
-//		//run away from ghosts
-//		Pixel runAwayFromGhost = runAway(source);
-//		if (runAwayFromGhost!=null)
-//			return runAwayFromGhost;
+		//run away from ghosts
+		Pixel runAwayFromGhost = runAway(source);
+		if (runAwayFromGhost!=null)
+			return runAwayFromGhost;
 
 		PriorityQueue<Path> queue = new PriorityQueue<>(new PathComperator(corners)); //priority queue, poll the shortest path
 		queue.add(new Path(0)); //add the source to queue
@@ -163,20 +163,20 @@ public class Shortest {
 			return null;
 
 		Pixel closestGhost = closestGhost(source);
-		double ghostRadiusEating = game.ghosts.iterator().next().getRadius();
 
 		//the ghost is far away
-		if (source.distance(closestGhost) > (1+ghostRadiusEating)*90)
+		if (source.distance(closestGhost) > 40)
 			return null;
 
 		int deltaY = (closestGhost.y() - source.y());
 		int deltaX = closestGhost.x() - source.x();
 
-		if (source.distance(closestGhost) < (1+ghostRadiusEating)*15)
+		//Go to the opposite direction
+		if (source.distance(closestGhost) > 8)
 			if (freePath(source, new Pixel(source.x()-deltaX, source.y()-deltaY)))
 				return new Pixel(source.x()-deltaX, source.y()-deltaY);
 
-		//Go in the free vertical direction from the vector to the ghost
+		//Go in the free direction, by vector vertical to the vector from current location to the ghost
 		if (freePath(source, new Pixel(source.x()+deltaY, source.y()-deltaX)))
 			return new Pixel(source.x()+deltaY, source.y()-deltaX);
 		if (freePath(source, new Pixel(source.x()-deltaY, source.y()+deltaX)))
@@ -185,9 +185,11 @@ public class Shortest {
 		return null;
 	}
 
+	//Find the closest ghost to source point
 	private Pixel closestGhost(Pixel source) {
 		Pixel closestPixel = null; 
 		double minDistance = Double.MAX_VALUE;
+		//find mun distance, for all ghosts in the game
 		for (Ghost ghost: game.ghosts) {
 			Pixel ghostPixel = board.map.gps2pixel(ghost.getLocation(),  board.getWidth(), board.getHeight());
 			if (source.distance(ghostPixel) < minDistance) {
