@@ -24,6 +24,5 @@ public class Main
 		window.setVisible(true);
 		window.setSize(map.getOriginWidht()+16,map.getOriginHeight()+59);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 	}
 }

@@ -1,6 +1,6 @@
 package GeoObjects;
 
-import com.sun.tools.javac.resources.compiler;
+//import com.sun.tools.javac.resources.compiler;
 
 import Coords.MyCoords;
 import gui.MainWindow;
@@ -52,24 +52,24 @@ public class Box {
 	public Pixel getPixelNw(PanelBoard board) {
 		Pixel nePixel = board.map.gps2pixel(ne, board.getWidth(), board.getHeight());
 		Pixel swPixel = board.map.gps2pixel(sw, board.getWidth(), board.getHeight());
-		return new Pixel(swPixel.x()-1, nePixel.y()-1);
+		return new Pixel(swPixel.x()-2, nePixel.y()-2);
 	}
 
 	public Pixel getPixelSe(PanelBoard board) {
 		Pixel nePixel = board.map.gps2pixel(ne, board.getWidth(), board.getHeight());
 		Pixel swPixel = board.map.gps2pixel(sw, board.getWidth(), board.getHeight());
-		return new Pixel(nePixel.x()+1, swPixel.y()+1);
+		return new Pixel(nePixel.x()+2, swPixel.y()+2);
 	}
 	
 	public Pixel getPixelSw(PanelBoard board) {
 		Pixel swPixel = board.map.gps2pixel(sw, board.getWidth(), board.getHeight());
-		return new Pixel(swPixel.x()-1, swPixel.y()+1);
+		return new Pixel(swPixel.x()-2, swPixel.y()+2);
 	}
 	
 	public Pixel getPixelNe(PanelBoard board) {
 		// TODO Auto-generated method stub
 		Pixel nePixel = board.map.gps2pixel(ne, board.getWidth(), board.getHeight());
-		return new Pixel(nePixel.x()+1, nePixel.y()-1);
+		return new Pixel(nePixel.x()+2, nePixel.y()-2);
 	}
 	
 	//return all the frames of the box as lines of pixels
