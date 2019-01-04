@@ -69,12 +69,8 @@ public class Shortest {
 		if (algoFound == null)
 			return null;
 		
-		//run away from far ghost in the way
-<<<<<<< HEAD
-		Segment segment = new Segment(new Line(source, algoFound), source, algoFound);
-=======
+		//run away from far ghost in the way		Segment segment = new Segment(new Line(source, algoFound), source, algoFound);
 		Segment segment = new Segment(source, algoFound);
->>>>>>> 0b8a8c5f5570b30fbc32d0ca1a43c0fee1d67572
 
 		for (Ghost ghost: game.ghosts) {
 			Pixel ghostPixel = board.map.gps2pixel(ghost.getLocation(),  board.getWidth(), board.getHeight());

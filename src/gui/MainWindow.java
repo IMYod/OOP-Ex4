@@ -144,7 +144,7 @@ public class MainWindow extends JFrame
 		start.add(manual);
 		start.add(auto);
 		menuBar.add(start);
-<<<<<<< HEAD
+
 		
 		//statics menu
 		JMenu statics = new JMenu("statics");
@@ -168,8 +168,7 @@ public class MainWindow extends JFrame
 		statics.add(allBest);
 		
 		menuBar.add(statics);	
-=======
->>>>>>> 0b8a8c5f5570b30fbc32d0ca1a43c0fee1d67572
+
 
 		this.setJMenuBar(menuBar);
 		

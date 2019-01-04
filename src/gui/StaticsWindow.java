@@ -25,7 +25,7 @@ public class StaticsWindow extends JFrame implements Printer {
 		setTitle("Statics");
 		setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setType(Type.POPUP);
 	}
 
