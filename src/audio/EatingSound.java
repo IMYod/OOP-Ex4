@@ -1,9 +1,12 @@
 package audio;
-
 import java.io.FileInputStream;
 
 import javazoom.jl.player.Player;
-
+/**
+ * This class is responsible to make a background music for this game.
+ * NOTE: This class use the jl1.0.1.jar 
+ *
+ */
 public class EatingSound implements Runnable {
 	
 	 private final String path = "audio\\eating.mpeg";

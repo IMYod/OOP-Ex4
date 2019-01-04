@@ -2,7 +2,12 @@ package audio;
 
 import javazoom.jl.player.*;
 import java.io.FileInputStream;
-
+/**
+ * This class is responsible to make a eating sound music for the game.
+ * NOTE: This class use the jl1.0.1.jar 
+ * @author eladn
+ *
+ */
 public class SimplePlayer implements Runnable{
 
     private final String path = "audio\\marioSong.mpeg";
