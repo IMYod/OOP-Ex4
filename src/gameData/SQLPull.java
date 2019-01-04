@@ -76,7 +76,7 @@ public class SQLPull {
 	}
 
 	public static String getHeadline() {
-		return("FirstID\t\tSecondID\tThirdID\t\tLogTime\t\t\t\tPoint\t\tGameID\n");
+		return("FirstID\tSecondID\tThirdID\tLogTime\tPoint\tGameID");
 	}
 
 	public String getMaxForScenario(Statement statement) {
@@ -194,9 +194,9 @@ public class SQLPull {
 		try {
 			return (resultSet.getInt("FirstID")+"\t" +
 					resultSet.getInt("SecondID")+"\t" +
-					resultSet.getInt("ThirdID")+"\t\t" +
-					resultSet.getTimestamp("LogTime") +"\t\t" +
-					resultSet.getDouble("Point") +"\t\t" +
+					resultSet.getInt("ThirdID")+"\t" +
+					resultSet.getTimestamp("LogTime") +"\t" +
+					resultSet.getDouble("Point") +"\t" +
 					resultSet.getLong("SomeDouble"));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -205,12 +205,4 @@ public class SQLPull {
 		return null;
 	}
 	
-	public void show(String text) {
-		
-	}
-
-	public static void main(String[] args) {
-		SQLPull sql = new SQLPull(new SystemPrinter());
-		sql.connect(FilterOption.getAllBest);
-	}
 }
