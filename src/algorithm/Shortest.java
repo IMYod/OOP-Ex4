@@ -17,16 +17,39 @@ import guiObjects.Path;
 import guiObjects.PathComperator;
 import guiObjects.Pixel;
 import guiObjects.Segment;
-
+/**
+ * This class is the algorithm and allows the automatic game.
+ * We have modeled the problem into an unintended graph, this algorithm based on BFS algorithm, using priority queue.
+ * So that the corners of the boxes are the nodes of the graph. Thus we knew to tell the player where he could go, 
+ * so that for every available lane there was an arch between those nodes.
+ * 
+ * The progress of the game: 
+ * 
+ * Game start:
+ * We have determined that the beginning of the game will be where the highest concentration of fruits.
+ * 
+ * Continue game:
+ * The player will look for the closest node to him to be able to eat. And once he got to the fruit,
+ * he would see if there was any more fruit next to that fruit.
+ * This is how the player will continue until the fruit is eaten. Whether he ate them or the pacmans around him!
+ * Additionally, the player will always look to see if there is a ghost threatening him and try to escape to the side or up, if necessary.
+ * 
+ * @author Yoav and Elad.
+ *
+ */
 public class Shortest {
 
 	AllObjects game;
 	PanelBoard board;
-	public boolean[][] matrixCorners;
+	public boolean[][] matrixCorners; // represent the graph 
 	public Pixel[] corners;
 
 	private Point3D centeralPoint; //for init location
 	int maxCloseObjects = 0; //how many objects nearby the most centeral object
+
+	
+////////////////////////***Constructor****///////////////////////////////////////////
+
 
 	public Shortest(AllObjects game, PanelBoard board) {
 		refresh(game, board);
@@ -35,6 +58,15 @@ public class Shortest {
 		buildGraph();
 	}
 
+
+///////////////////////////****************//////////////////////////////////////////
+///////////////////////////*** Methods ***//////////////////////////////////////////
+//////////////////////////****************/////////////////////////////////////////
+
+	
+	/**
+	 * This function initializes the representative matrix of the graph
+	 */
 	private void buildGraph() {
 
 		//Init the corners array
@@ -56,6 +88,11 @@ public class Shortest {
 				matrixCorners[i][j] = freeCornersPath(i, j);
 	}
 
+	/**
+	 * This method calculates all the constraints and brings the ideal location for the player to go.
+	 * @param source the location of the player.
+	 * @return The calculation of the algorithm.
+	 */
 	public Pixel findPath(Pixel source) {
 		initSource(source);
 
@@ -83,7 +120,13 @@ public class Shortest {
 		return algoFound;
 	}
 
-	//based on BFS algorithm, using priority queue
+	
+	/**
+	 * This method make the search fo the ideal path to the player.
+	 * This algorithm based on BFS algorithm, using priority queue.
+	 * @param source The source pixel 
+	 * @return The Ideal pixel to go according to the algorithm
+	 */
 	public Pixel findPathAlgorithm(Pixel source) {
 
 		PriorityQueue<Path> queue = new PriorityQueue<>(new PathComperator(corners)); //priority queue, poll the shortest path
@@ -105,17 +148,27 @@ public class Shortest {
 		}
 		return null; //not found any fruit or other corner
 	}
-
+	
+/**
+ * This method Initializes the pixel source and  by that, the matrix of the graph
+ * @param source The pixel of the place on the map that we wanted to check.
+ */
 	public void initSource(Pixel source) {
 		corners[0] = source;
 		for (int i=1; i<corners.length; i++) {
-			boolean free = freePath(source, corners[i]);
+			boolean free = freePath(source, corners[i]); // True - free path, False - no free path.
 			matrixCorners[0][i] = free;
 			matrixCorners[i][0] = free;
 		}
 	}
 
 
+	/**
+	 * This method checks if those to corners are on the same box, and knows to tell if they Nearby corners or Opposite corners.
+	 * @param c1 The first corner 
+	 * @param c2 The second corner
+	 * @return True for a free path else False.
+	 */
 	private boolean freeCornersPath(int c1, int c2) {
 		//check if the corners belong to the same box
 		if (boxNumber(c1) == boxNumber(c2)) {
@@ -128,7 +181,12 @@ public class Shortest {
 	private int boxNumber(int corner) {
 		return (corner-1)/4;
 	}
-
+	/**
+	 * This method checks if there is a free path between two pixels on the borad
+	 * @param source The source pixel
+	 * @param target The target pixel
+	 * @return True if there is a free path. False if there is not!
+	 */
 	private boolean freePath(Pixel source, Pixel target) {
 		if (source.equals(target))
 			return true;
@@ -143,7 +201,12 @@ public class Shortest {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * This method will tell us for some source pixel what is the closet Fruit And Packman to him.
+	 * @param source The source pixel
+	 * @return The Pixel that is the closet to the source.
+	 */
 	private Pixel closestFruitAndPackman(Pixel source) {
 		Pixel closestPixel = null; 
 		double minDistance = Double.MAX_VALUE;
@@ -171,14 +234,21 @@ public class Shortest {
 		}
 		return closestPixel;
 	}
-
+	/**
+	 * This method refresh the board!
+	 * @param game new updated game 
+	 * @param board new updated board
+	 */
 	public void refresh(AllObjects game, PanelBoard board) {
 		this.game = game;
 		this.board = board;
 	}
 
-	//**********run away from ghosts**************
-
+	/**
+	 * This method make the player run away from ghosts
+	 * @param source Where the player is.
+	 * @return Where the should go
+	 */
 	public Pixel runAway(Pixel source) {
 		if (game.ghosts.isEmpty()) //no ghosts in this game
 			return null;
@@ -200,7 +270,12 @@ public class Shortest {
 		//Go in the free direction, by vector vertical to the vector from current location to the ghost
 		return gotoTheSide(source, deltaX, deltaY);
 	}
-
+	
+	/**
+	 * This method tells to the player where to run away from the ghost
+	 * 
+	 * @return The pixel to go!
+	 */
 	private Pixel gotoTheSide(Pixel source, int deltaX, int deltaY) {
 		if (freePath(source, new Pixel(source.x()+deltaY, source.y()-deltaX)))
 			return new Pixel(source.x()+deltaY, source.y()-deltaX);
@@ -210,7 +285,12 @@ public class Shortest {
 		return null;
 	}
 
-	//Find the closest ghost to source point
+	
+	/**
+	 * This method find the closest ghost to source point
+	 * @param source Where the player is.
+	 * @return  Where the closest ghost is.
+	 */
 	private Pixel closestGhost(Pixel source) {
 		Pixel closestPixel = null; 
 		double minDistance = Double.MAX_VALUE;
@@ -225,8 +305,12 @@ public class Shortest {
 		return closestPixel;
 	}
 
-	//******** find first location *********
-
+	
+	/**
+	 * This method find first location for the player.
+	 * @param radius
+	 * @return The ideal point for the player.
+	 */
 	public Point3D mostCenteral(double radius) {
 		maxCloseObjects = 0;
 		centeralPoint = null;
@@ -239,6 +323,11 @@ public class Shortest {
 		return centeralPoint;
 	}
 
+	/**
+	 * This method calculate the object that have the most close objects. 
+	 * @param object The object we check.
+	 * @param radius The radius we what to compute with.
+	 */
 	private void calculateCloseObject(GenericGeoObject object, double radius) {
 		int counter = countCloseObjects(object.getLocation(), radius);
 		if (counter > maxCloseObjects) {
@@ -246,7 +335,12 @@ public class Shortest {
 			centeralPoint = object.getLocation(); 
 		}
 	}
-
+	/**
+	 * This method is a help method to the one above, and count the object that close to some object. 
+	 * @param location Where to look for.
+	 * @param radius The radius that we want to compute with.
+	 * @return The sum of the object.
+	 */
 	private int countCloseObjects(Point3D location, double radius) {
 		Pixel source = board.map.gps2pixel(location, board.getWidth(), board.getHeight());
 		int counter = 0;

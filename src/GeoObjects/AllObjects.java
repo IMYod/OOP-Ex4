@@ -9,7 +9,7 @@ import guiObjects.Pixel;
 
 /**
  * A class that includes a collection of fruit and a collection of robots, 
- * the department has the ability to be built
+ * the class has the ability to be built
  * From the csv file, see the metadata format, and save its information to such a file.
  */
 public class AllObjects {
@@ -20,7 +20,10 @@ public class AllObjects {
 	public Set <Box> boxes = new HashSet<Box>();
 	public Player player;
 
-
+//////////////////////////****************/////////////////////////////////////////
+///////////////////////////*** Methods ***//////////////////////////////////////////
+//////////////////////////****************/////////////////////////////////////////
+	
 	// clears all the objects from the game.
 	public void clear() {	
 		fruits.clear();

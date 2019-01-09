@@ -9,19 +9,15 @@ public class Pixel {
 	private int x;
 	private int y;
 
-	////////////////////***Constructor****///////////////////////////////////
+////////////////////////***Constructor****///////////////////////////////////
 
 	public Pixel(int x, int y) {
-//		if (x<0 || y<0) {
-////			System.out.println("out of bounds");
-//			x = Math.max(0, x);
-//			y = Math.max(0, y);
-//		}
+
 		this.x = x;
 		this.y = y;
 	}
 
-	///////////////*** Getters and Setters**/////////////////////
+///////////////*** Getters and Setters**/////////////////////
 
 	public int x() {
 		return x;
@@ -30,11 +26,17 @@ public class Pixel {
 	public int y() {
 		return y;
 	}
-	
+
+///////////////////////////*** Methods ***//////////////////////////////////////////
+
 	public String toString() {
 		return "(" + x + ", " + y + ")";
 	}
-	
+	/**
+	 * This method compute the distance from one pixel to other.
+	 * @param other The other pixel that we will check
+	 * @return The distance.
+	 */
 	public double distance(Pixel other) {
 		int dx = other.x-x;
 		int dy = other.y-y;
@@ -47,7 +49,11 @@ public class Pixel {
 		}
 		return false;
 	}
-	
+	/**
+	 * This function is compute the azimuth to target pixel
+	 * @param target  The pixel that we check
+	 * @return The azimuth.
+	 */
 	public double azimuthPixel (Pixel target) {
 		int deltaY = target.y - y;
 		int deltaX = target.x - x;

@@ -12,11 +12,15 @@ import javax.swing.SwingUtilities;
 //import com.sun.net.ssl.internal.www.protocol.https.Handler;
 
 import gameData.Report;
-
+/**
+ *
+ * @author eladn
+ *
+ */
 public class PanelBottom extends JPanel {
 
 	MainWindow window;
-	JLabel score = new JLabel(new ImageIcon("ImagesforGui\\Icons\\score.png", "score"));
+	JLabel score = new JLabel();
 	JLabel timeLeft = new JLabel();
 	JLabel killByGhosts = new JLabel();
 	JLabel outOfBox = new JLabel();
@@ -29,6 +33,7 @@ public class PanelBottom extends JPanel {
 	}
 
 	private void initPanel() {
+		
 		add(score);
 		add(timeLeft);
 		add(killByGhosts);

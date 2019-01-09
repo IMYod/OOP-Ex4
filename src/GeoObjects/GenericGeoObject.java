@@ -19,7 +19,7 @@ public class GenericGeoObject {
 	private double spd_wt;
 	private double radius;
 	
-	////////////////// ***Constructors****///////////////////////////////////
+////////////////////////***Constructor****///////////////////////////////////////////
 
 	public GenericGeoObject (Point3D location, int id, double spd_wt, double radius) {
 		this.location= location;
@@ -28,7 +28,7 @@ public class GenericGeoObject {
 		this.radius = radius;
 	}
 	
-	///////////////*** Getters and Setters**/////////////////////
+////////////////////*** Getters and Setters**//////////////////////////////////////
 
 
 
@@ -56,7 +56,8 @@ public class GenericGeoObject {
 	public String toString() {
 		return " [location:" + location + ", id:" + id + " , speed/weight:" + spd_wt + " radius:" + radius + "]";
 	}
-	///////////////*** Methods ***/////////////////////
+	
+///////////////////////////*** Methods ***//////////////////////////////////////////
 
 	/**
 	 * This function compute the distance between two GenericGeoObject

@@ -73,8 +73,10 @@ public class MainWindow extends JFrame
 	private Csv2Game convertor = new Csv2Game();
 	private Data2Game dataConvertor = new Data2Game();
 
-//////////////////////////////***Constructors****///////////////////////////////////
-
+////////////////////////////////*******************///////////////////////////////////
+///////////////////////////////***Constructors****///////////////////////////////////
+//////////////////////////////********************//////////////////////////////////
+	
 	public MainWindow(Map map) 
 	{		
 		this.setTitle("Mario Game");
@@ -273,16 +275,16 @@ public class MainWindow extends JFrame
 
 			//This function updates data in the bottom panel
 			private void updateAll(Report report) {
-				Runnable updater = new LabelUpdater(bottom.killByGhosts, "kill by ghosts:"+report.getKillByGhosts());
+				Runnable updater = new LabelUpdater(bottom.killByGhosts, "Kill By Ghosts: "+report.getKillByGhosts());
 				EventQueue.invokeLater(updater);
 
-				updater = new LabelUpdater(bottom.score, " "+report.getScore());
+				updater = new LabelUpdater(bottom.score, "    Score: "+report.getScore());
 				EventQueue.invokeLater(updater);
 
-				updater = new LabelUpdater(bottom.outOfBox, "out of box:"+report.getOutOfBox());
+				updater = new LabelUpdater(bottom.outOfBox," Out Of Box: "+report.getOutOfBox());
 				EventQueue.invokeLater(updater);
 
-				updater = new LabelUpdater(bottom.timeLeft, "time left:"+report.getTimeLeft());
+				updater = new LabelUpdater(bottom.timeLeft, "Time Left: "+report.getTimeLeft());
 				EventQueue.invokeLater(updater);
 			}
 		});

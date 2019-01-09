@@ -25,12 +25,27 @@ public class Csv2Game {
 	private String csvName;
 	private int Type, id, Lat, Lon, Alt, speed, radius;
 
+///////////////////////////****************//////////////////////////////////////////
+///////////////////////////*** Methods ***//////////////////////////////////////////
+//////////////////////////***************//////////////////////////////////////////
+
+	/**
+	 * This method takes a path of a file and covert him to a game.
+	 * @param fileName path file .
+	 * @return A game object.
+	 */
 	public AllObjects convert(String fileName) {
 		file = new File(fileName);
 		csvName = fileName;
 		createGame();
 		return game;
 	}
+	
+	/**
+	 * This method takes a file and covert him to a game.
+	 * @param File The file to convert.
+	 * @return A game object.
+	 */
 	public AllObjects convert(File f) {
 		file = f;
 		csvName = f.getName();
@@ -38,6 +53,10 @@ public class Csv2Game {
 		return game;
 	}
 
+	/**
+	 * This method take a csv file and knows to read from him the data, 
+	 * and fill all the object that will be in the game.
+	 */
 	private void createGame() 
 	{
 		game =  new AllObjects();
@@ -61,7 +80,11 @@ public class Csv2Game {
 		}	
 
 	}
-
+	/**
+	 * This method takes the locations of the titles and save then.
+	 * motivation : To know which column is the belongs to each object. 
+	 * @param input The first row  that represent the titles. 
+	 */
 	public void setTitles(String[] input) {
 		for (int i=0; i<input.length; i++)
 		{
@@ -134,6 +157,8 @@ public class Csv2Game {
 					Double.parseDouble(csvRow[radius]));
 		}
 	}
+
+////////////////////*** Getters and Setters**//////////////////////////////////////
 
 	public AllObjects getGame() {
 		return game;

@@ -1,8 +1,14 @@
 package guiObjects;
 
 import java.util.ArrayList;
-
+/**
+ * This class represent a path of pixels.
+ * 
+ * @author Yoav and Elad.
+ */
 public class Path extends ArrayList<Integer> {
+
+////////////////////////***Constructors****///////////////////////////////////////////
 
 	public Path(int source) {
 		super();
@@ -13,11 +19,19 @@ public class Path extends ArrayList<Integer> {
 		super(path);
 		add(pixel);
 	}
-	
+
+///////////////////////////*** Methods ***//////////////////////////////////////////
+
+	//The tail of the path
 	public int getTail() {
 		return get(size()-1);
 	}
 	
+	/**
+	 * This method compute the distance between the corners
+	 * @param corners The pixels that we going to check.
+	 * @return The distance.
+	 */
 	public double distance(Pixel[] corners) {
 		double distance = 0;
 		for (int i=1; i<size(); i++) {

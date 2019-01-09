@@ -9,6 +9,8 @@ package GeoObjects;
 public class Packman extends GenericGeoObject 
 {
 
+////////////////////////***Constructor****///////////////////////////////////////////
+
 	public Packman(Point3D location, int id, double spd_wt, double radius) {
 		super(location, id, spd_wt, radius);
 	}
