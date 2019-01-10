@@ -308,7 +308,7 @@ public class Shortest {
 	
 	/**
 	 * This method find first location for the player.
-	 * @param radius
+	 * @param radius The radius we want.
 	 * @return The ideal point for the player.
 	 */
 	public Point3D mostCenteral(double radius) {

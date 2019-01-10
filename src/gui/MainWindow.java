@@ -149,13 +149,13 @@ public class MainWindow extends JFrame
 
 		
 		//statics menu
-		JMenu statics = new JMenu("statics");
+		JMenu statics = new JMenu("Statics");
 		
-		JMenuItem lastGame = new JMenuItem("Last game");
-		JMenuItem currentMyBest = new JMenuItem("My best in this scenario");
-		JMenuItem currentPlayersBest = new JMenuItem("Best of all players in this scenario");
-		JMenuItem allMyBest = new JMenuItem("My best in all scenarios");
-		JMenuItem allBest = new JMenuItem("Best of all players in all scenarios");
+		JMenuItem lastGame = new JMenuItem("Last game",new ImageIcon("ImagesforGui\\Icons\\lastGame.png"));
+		JMenuItem currentMyBest = new JMenuItem("My best in this scenario",new ImageIcon("ImagesforGui\\Icons\\best.png"));
+		JMenuItem currentPlayersBest = new JMenuItem("Best of all players in this scenario",new ImageIcon("ImagesforGui\\Icons\\best2.png"));
+		JMenuItem allMyBest = new JMenuItem("My best in all scenarios",new ImageIcon("ImagesforGui\\Icons\\best3.png"));
+		JMenuItem allBest = new JMenuItem("Best of all players in all scenarios",new ImageIcon("ImagesforGui\\Icons\\best4.png"));
 		
 		lastGame.addActionListener(new ListenerStatics(FilterOption.getMyLastGame));
 		currentMyBest.addActionListener(new ListenerStatics(FilterOption.getMyBest));
@@ -180,8 +180,13 @@ public class MainWindow extends JFrame
 			e.printStackTrace();
 		}
 	}
-//////////////////////////////////////////***Methods****///////////////////////////////////
 
+////////////////////////////////*******************///////////////////////////////////
+///////////////////////////////*****Methods*******///////////////////////////////////
+//////////////////////////////********************//////////////////////////////////
+	/**
+	 * This method initialization the panels of the window.
+	 */
 	private void initPanels() {
 		this.add("Center", myBoard);
 		myBoard.setVisible(true);
@@ -191,7 +196,10 @@ public class MainWindow extends JFrame
 		bottom.setSize(this.getWidth(), 100);
 		bottom.setVisible(true);
 	}
-
+	/**
+	 * This method responsible for the import from csv file.
+	 * @return True or false.
+	 */
 	public boolean importCsv() {
 		if (play != null && play.isRuning())
 			endGame();
@@ -206,7 +214,11 @@ public class MainWindow extends JFrame
 		}
 		return false;
 	}
-
+	
+	/**
+	 * This method responsible for making a new game.
+	 * 
+	 */
 	private void newGame() {
 		if (file == null)
 			return;
@@ -217,7 +229,11 @@ public class MainWindow extends JFrame
 		myBoard.repaintMe();
 		lastNumObjects = game.getNumOfFriutsAndPackmans();
 	}
-
+	
+	/**
+	 * This method responsible for starting the game.
+	 * 
+	 */
 	public void startGame(boolean automatic) {
 		if (!automatic)
 			press = Press.GO;
@@ -290,11 +306,19 @@ public class MainWindow extends JFrame
 		});
 		startAutoGame.start();
 	}
-
+	
+	/**
+	 * This method responsible for choose Manual Location,
+	 * for the first location. 
+	 */
 	private void chooseManualLocation() {
 		press = Press.FIRST_LOCATION;
 	}
 
+	/**
+	 * This method responsible for choose auto Location for the player
+	 * @return The starting point according to the algorithm.
+	 */
 	private Point3D chooseAutoLocation() {
 		Shortest algo = new Shortest(game, myBoard);
 		Point3D startingPoint = algo.mostCenteral(50);
@@ -306,7 +330,11 @@ public class MainWindow extends JFrame
 		lastLocation = startingPoint;
 		return startingPoint;	
 	}
-
+	
+	/**
+	 * This method responsible for choose a new direction for the player,
+	 * using the algorithm. 
+	 */
 	private void autoRotate(Shortest algo) {
 		if (game.player != null && !game.fruits.isEmpty()) {
 			Pixel playerPixelLocation = myBoard.map.gps2pixel(game.player.getLocation(), myBoard.getWidth(), myBoard.getHeight());
@@ -321,12 +349,18 @@ public class MainWindow extends JFrame
 		}
 		lastLocation = game.player.getLocation();
 	}
-
+	
+	/**
+	 * This method responsible for clearing the board probably for a 
+	 * new game.
+	 */
 	public void clear() {
-		// TODO Auto-generated method stub
 		game.clear();
 	}
-
+	
+	/**
+	 * This method responsible for ending the game.
+	 */
 	public void endGame() {
 		if (play==null)
 			return;

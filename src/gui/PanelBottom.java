@@ -13,8 +13,10 @@ import javax.swing.SwingUtilities;
 
 import gameData.Report;
 /**
- *
- * @author eladn
+ * This class is the Bottom Panel of main window for the GUI.
+ * This panel in charge on display the user all the data of the game on live!.
+ * @author Yoav and Elad.
+ * @version 1.0
  *
  */
 public class PanelBottom extends JPanel {
@@ -25,13 +27,17 @@ public class PanelBottom extends JPanel {
 	JLabel killByGhosts = new JLabel();
 	JLabel outOfBox = new JLabel();
 	
+////////////////////////***Constructor****///////////////////////////////////////////
+
 	public PanelBottom(MainWindow window) {
 		super();
 		this.window = window;
 		this.setLayout(new GridLayout(1, 7));
 		initPanel();
 	}
-
+	/**
+	 * This method initialization the panel
+	 */
 	private void initPanel() {
 		
 		add(score);
@@ -40,6 +46,10 @@ public class PanelBottom extends JPanel {
 		add(outOfBox);
 	}
 	
+	/**
+	 * This method refresh the data of the panel to make it live.
+	 * @param report The update report from the server.
+	 */
 	public void refresh(Report report) {
 		score.setText("" + report.getScore());
 		timeLeft.setText(" " + report.getTimeLeft());

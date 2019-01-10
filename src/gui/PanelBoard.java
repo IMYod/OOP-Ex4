@@ -22,7 +22,13 @@ import GeoObjects.Point3D;
 import guiObjects.Line;
 import guiObjects.Map;
 import guiObjects.Pixel;
-
+/**
+ * This class is the Panel Board of main window for the GUI.
+ * This panel contains all the map elements to show for the user.
+ * @author Yoav and Elad.
+ * @version 1.0
+ *
+ */
 public class PanelBoard extends JPanel implements MouseListener {
 
 	public MainWindow window;
@@ -34,6 +40,8 @@ public class PanelBoard extends JPanel implements MouseListener {
 	private BufferedImage ghostImage;
 	private BufferedImage playerImage;
 	public MyCoords mc = new MyCoords();
+
+////////////////////////***Constructor****///////////////////////////////////////////
 
 	public PanelBoard(MainWindow window, Map map) {
 		this.window = window;
@@ -56,6 +64,9 @@ public class PanelBoard extends JPanel implements MouseListener {
 		this.addMouseListener(this);
 	}
 
+///////////////////////////*** Methods ***//////////////////////////////////////////
+
+	
 	/////////////////////////////****Painting the map***///////////////////////////////////////
 
 	public void paint(Graphics g)
@@ -136,20 +147,16 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		//		if (window.press == Press.FIRST_LOCATION) {
-		//			this.getGraphics().drawImage(playerImage, e.getX(), e.getY(), this);
-		//		}
+	
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -157,6 +164,11 @@ public class PanelBoard extends JPanel implements MouseListener {
 		paintImmediately(0, 0, this.getWidth(), this.getHeight());
 	}
 	
+	/**
+	 * This method set the bounding for the panel according to the map data
+	 * that he gets.
+	 * @param map_data The data from the map.
+	 */
 	void setBounding(String map_data) {
 		String[] csvRow = map_data.split(",");
 		Point3D point1 = new Point3D(Double.parseDouble(csvRow[2]),
