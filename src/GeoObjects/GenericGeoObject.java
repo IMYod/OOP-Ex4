@@ -18,8 +18,9 @@ public class GenericGeoObject {
 	private int id;
 	private double spd_wt;
 	private double radius;
+	private String imagePath;
 	
-	////////////////// ***Constructors****///////////////////////////////////
+////////////////////////***Constructor****///////////////////////////////////////////
 
 	public GenericGeoObject (Point3D location, int id, double spd_wt, double radius) {
 		this.location= location;
@@ -28,7 +29,7 @@ public class GenericGeoObject {
 		this.radius = radius;
 	}
 	
-	///////////////*** Getters and Setters**/////////////////////
+////////////////////*** Getters and Setters**//////////////////////////////////////
 
 
 
@@ -51,12 +52,16 @@ public class GenericGeoObject {
 	public double getRadius() {
 		return radius;
 	}
-
-	@Override
-	public String toString() {
-		return " [location:" + location + ", id:" + id + " , speed/weight:" + spd_wt + " radius:" + radius + "]";
+	
+	public String getImagePath() {
+		return imagePath;
 	}
-	///////////////*** Methods ***/////////////////////
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+	
+///////////////////////////*** Methods ***//////////////////////////////////////////
 
 	/**
 	 * This function compute the distance between two GenericGeoObject
@@ -67,6 +72,11 @@ public class GenericGeoObject {
 	public double distance(GenericGeoObject other) {
 		MyCoords mc = new MyCoords();
 		return mc.distance3d(location, other.location);
+	}
+	
+	@Override
+	public String toString() {
+		return " [location:" + location + ", id:" + id + " , speed/weight:" + spd_wt + " radius:" + radius + "]";
 	}
 
 }

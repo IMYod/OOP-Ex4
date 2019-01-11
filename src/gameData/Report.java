@@ -1,5 +1,11 @@
 package gameData;
-
+/**
+ * This class holds all the data report from the game.
+ * Then we can use her objects to update the data on live on the 
+ * game board.
+ * @author Elad and Yoav.
+ *
+ */
 public class Report {
 	
 	String date;
@@ -9,10 +15,17 @@ public class Report {
 	int killByGhosts;
 	int outOfBox;
 
+////////////////////////***Constructor****///////////////////////////////////////////
+
 	public Report() {
 		super();
 	}
-	
+
+	/**
+	 * This method get a String and parse her to a report fields.
+	 * @param playReport The String we get.
+	 * @return A report object of this String. 
+	 */
 	public static Report Parse(String playReport) {
 		Report report = new Report();
 		String[] parse = playReport.split(",");
@@ -26,6 +39,8 @@ public class Report {
 		
 		return report;
 	}
+
+////////////////////*** Getters and Setters**//////////////////////////////////////
 
 	public String getDate() {
 		return date;

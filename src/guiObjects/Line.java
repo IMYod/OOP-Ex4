@@ -1,14 +1,17 @@
 package guiObjects;
-
-//y=mx+n
-//
-
+/**
+ * This class represent a line in the space of 2d.
+ * y = mx + n.
+ *
+ */
 public class Line {
 	
 	double m; //slope
 	double n; //y-intercept
 	boolean vertical;  //parallel to the y-axis
-	
+
+////////////////////////***Constructors****///////////////////////////////////////////
+
 	public Line(double m, double n) {
 		this.m = m;
 		this.n= n;
@@ -19,8 +22,15 @@ public class Line {
 		this(other.m, other.n);
 		vertical = other.vertical;
 	}
+
+///////////////////////////*** Methods ***//////////////////////////////////////////
+
 	
-	//calculate line equation by two points
+	/**
+	 * This method calculate line equation by two points
+	 * @param p0 first point 
+	 * @param p1 second point
+	 */
 	public Line(Pixel p0, Pixel p1) {
 		if (p1.x() == p0.x()) { //parallel to the y-axis
 			m = Double.MAX_VALUE;
@@ -34,6 +44,11 @@ public class Line {
 		}
 	}
 	
+	/**
+	 * This method compute if there is a cutting point between two lines. 
+	 * @param other The other line to check.
+	 * @return The pixel of the cutting point.
+	 */
 	public Pixel cuttingPoint(Line other) {
 		double x;
 		double y;
@@ -65,19 +80,21 @@ public class Line {
 		return new Pixel((int)(x+0.001), (int)(y+0.001));
 	}
 
+	public String toString() {
+		if (vertical)
+			return "x="+(-n);
+		else
+			return "y="+m+"*x+"+n;
+	}
+
+	////////////////////*** Getters and Setters**//////////////////////////////////////
+
 	public double getM() {
 		return m;
 	}
 
 	public double getN() {
 		return n;
-	}
-	
-	public String toString() {
-		if (vertical)
-			return "x="+(-n);
-		else
-			return "y="+m+"*x+"+n;
 	}
 
 }

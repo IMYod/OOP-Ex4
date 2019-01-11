@@ -1,10 +1,16 @@
 package guiObjects;
-
+/**
+ * This class represent a segment for the board of the game.
+ * 
+ * @author Yoav and Elad.
+ */
 public class Segment {
 
 	Line line;
 	Pixel p1; //p1.x<p2.x
 	Pixel p2;
+
+////////////////////////***Constructors****///////////////////////////////////////////
 
 	public Segment(Line line, Pixel p1, Pixel p2) {
 		this.line = new Line(line);
@@ -22,10 +28,17 @@ public class Segment {
 		this(new Line(p1,p2), p1, p2);
 	}
 
+///////////////////////////*** Methods ***//////////////////////////////////////////
+
 	public double length() {
 		return p1.distance(p2);
 	}
-
+	
+	/**
+	 * This method checks if the is a cutting point with other segment.
+	 * @param other The other segment.
+	 * @return The pixel of the cuuting.
+	 */
 	public Pixel cuttingPoint(Segment other) {
 		Pixel cuttingLines = line.cuttingPoint(other.line);
 		if (cuttingLines == null)
@@ -40,6 +53,11 @@ public class Segment {
 		return null;
 	}
 	
+	/**
+	 * This method checks if there is a some pixel on the segment.
+	 * @param pixel That we will check with.
+	 * @return True Or False.
+	 */
 	public boolean onSegment(Pixel pixel) {
 		if (pixel.equals(p1) || pixel.equals(p2))
 			return false;

@@ -15,18 +15,18 @@ public class Box {
 	private int id;
 	private Point3D ne;
 	private Point3D sw;
-//	private double nothing1;
-//	private double nothing2;
 	private MyCoords mc = new MyCoords();
-	
+
+////////////////////////***Constructor****///////////////////////////////////////////
+
 	public Box(Point3D point1, int id, Point3D point2, double nothing1, double nothing2){
-		this.id = id;
-//		this.nothing1 = nothing1;
-//		this.nothing2 = nothing2;	
+		this.id = id;	
 		sw = point1;
 		ne = point2;
 
 	}
+
+///////////////////////***Getters and Setters***//////////////////////////////////////
 	
 	public int getId() {
 		return id;
@@ -40,6 +40,13 @@ public class Box {
 		return sw;
 	}
 
+///////////////////////////*** Methods ***//////////////////////////////////////////
+
+	/**
+	 * This method compute the pixels of the corners of the board.
+	 * @param board The board of the game.
+	 * @return An array with the pixels.
+	 */
 	public Pixel[] getPixelsCorners(PanelBoard board) {
 		Pixel[] corners = new Pixel[4];
 		corners[0] = getPixelNe(board);
@@ -48,6 +55,11 @@ public class Box {
 		corners[3] = getPixelSe(board);
 		return corners;
 	}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////	
+//********Those methods are the calculation to find the corners pixels of the game board.********//
+///////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	
 	public Pixel getPixelNw(PanelBoard board) {
 		Pixel nePixel = board.map.gps2pixel(ne, board.getWidth(), board.getHeight());
@@ -67,12 +79,17 @@ public class Box {
 	}
 	
 	public Pixel getPixelNe(PanelBoard board) {
-		// TODO Auto-generated method stub
 		Pixel nePixel = board.map.gps2pixel(ne, board.getWidth(), board.getHeight());
 		return new Pixel(nePixel.x()+2, nePixel.y()-2);
 	}
 	
-	//return all the frames of the box as lines of pixels
+////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * This method return all the frames of the box as lines of pixels 
+      *@param board The board of the game.
+	 * @return An array with the segments.
+	 */
 	public Segment[] getFrame(PanelBoard board) {
 		Segment[] frame = new Segment[4];
 		frame[0] = getDownSegment(board);
@@ -81,6 +98,10 @@ public class Box {
 		frame[3] = getRightSegment(board);
 		return frame;
 	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////	
+//********Those methods are the calculation to find the Segment of frame of the game board.******//
+///////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public Segment getDownSegment(PanelBoard board) {
 		Pixel sePixel = getPixelSe(board);
@@ -111,12 +132,5 @@ public class Box {
 	}
 	
 
-//	public double getWidth() {
-//		return mc.distance2D(nw, ne);
-//	}
-//	
-//	public double getHeight() {
-//		return mc.distance2D(nw, se);
-//	}
 	
 }

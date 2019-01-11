@@ -9,26 +9,37 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import gameData.SQLPull;
-
+/**
+ * This class is a Gui for a Statics Window , this window will show  
+ * a few Statics That the user will want to see.s
+ * @author Yoav
+ *
+ */
 public class StaticsWindow extends JFrame implements Printer {
 	
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	JTable table;
 	JScrollPane jsp;
-	
+
+////////////////////////***Constructor****///////////////////////////////////////////
+
 	public StaticsWindow() {
 		
 		setTitle("Statics");
 		setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setType(Type.POPUP);
 	}
 
+///////////////////////////*** Methods ***//////////////////////////////////////////
+
+	
+	/**
+	 * This method print the Statics to the Window
+	 */
 	@Override
 	public void print(String text) {
 		String[] headLine = SQLPull.getHeadline().split("\t");
