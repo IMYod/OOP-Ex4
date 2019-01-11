@@ -44,6 +44,7 @@ public class PanelBoard extends JPanel implements MouseListener {
 
 	////////////////////////***Constructor****///////////////////////////////////////////
 
+
 	public PanelBoard(MainWindow window, Map map) {
 		this.window = window;
 		this.map = map;

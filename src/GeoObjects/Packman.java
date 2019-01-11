@@ -12,6 +12,8 @@ public class Packman extends GenericGeoObject
 
 ////////////////////////***Constructor****///////////////////////////////////////////
 
+////////////////////////***Constructor****///////////////////////////////////////////
+
 	public Packman(Point3D location, int id, double spd_wt, double radius) {
 		super(location, id, spd_wt, radius);
 		setImagePath(imagePath);
